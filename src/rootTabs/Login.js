@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, Dimensions, Image } from 'react-native'
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
+import LoginScreen, { SocialButton } from "react-native-login-screen";
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -8,13 +9,14 @@ const windowHeight = Dimensions.get('window').height;
 const Login = () => {
   return (
     <View style={styles.container}>
-          {/* <View style={styles.containerBackground}>
-      <Image
-        style={styles.titleImage}
-        source={require('../../images/login.jpg')}
+      <Text>login</Text>
+      <LoginScreen
+        // logoImageSource={require("./assets/logo-example.png")}
+        onLoginPress={() => { }}
+        onSignupPress={() => { }}
+        onEmailChange={(email) => { }}
+        onPasswordChange={(password) => { }}
       />
-    </View> */}
-    <Text>login</Text>
     </View>
   )
 }
@@ -22,7 +24,7 @@ const Login = () => {
 export default Login
 
 const styles = StyleSheet.create({
-  container : {
+  container: {
     flex: 1,
     backgroundColor: '#fff'
   },
