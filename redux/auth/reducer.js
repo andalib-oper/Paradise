@@ -17,7 +17,7 @@ const initialState = {
     id: "",
     accessToken: "",
     refreshToken: "",
-    role: "",
+    // role: "",
     loading: "",
     error: ""
   };
@@ -32,7 +32,7 @@ const initialState = {
         }
       }
       case REQ_SUCCESS: {
-        console.log(action)
+        // console.log(action)
         return {
           ...state,
           loading: false,
@@ -41,7 +41,7 @@ const initialState = {
           lastName: action.lastName,
           id: action.id,
           accessToken: action.accessToken,
-          role: action.role,
+          // role: action.role,
           isLoggedIn: true,
           error: '',
         };

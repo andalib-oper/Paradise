@@ -8,9 +8,9 @@ import {tokenRetriever} from '../redux/auth/action';
 const config = () => {
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   dispatch(tokenRetriever());
-  // }, [dispatch]);
+  useEffect(() => {
+    dispatch(tokenRetriever());
+  }, [dispatch]);
 
   const authState = useSelector(state => state.authState);
   return (

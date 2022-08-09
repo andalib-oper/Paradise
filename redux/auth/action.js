@@ -26,7 +26,7 @@ export const reqSuccess = (
   // firstName,
   // lastName,
   // id,
-  // accessToken,
+  accessToken,
   // role
 });
 
@@ -60,26 +60,26 @@ export const logUserIn = (loginData) => {
         //? SAVING USER DATA TO ASYNC STORAGE ON SUCCESSFUL LOGIN.
         if(response.data.user.role == 'Store Manager','IT'){
           const userData = JSON.stringify({
-            email: response.data.user.email,
-            id: response.data.user._id,
+            // email: response.data.user.email,
+            // id: response.data.user._id,
             accessToken: response.data.AccessToken,
-            firstName: response.data.user.firstName,
-            lastName: response.data.user.lastName,
-            role: response.data.user.role,
+            // firstName: response.data.user.firstName,
+            // lastName: response.data.user.lastName,
+            // role: response.data.user.role,
           });
           await AsyncStorage.setItem('byitAuthToken', userData);
-          // console.log('Saved data to async storage!');
-          // console.log(response)
+          // console.log('Saved data to async storage!', userData);
           dispatch(
             reqSuccess(
-              response.data.user.email,
-              response.data.user.firstName,
-              response.data.user.lastName,
-              response.data.user._id,
+              // response.data.user.email,
+              // response.data.user.firstName,
+              // response.data.user.lastName,
+              // response.data.user._id,
               response.data.AccessToken,
-              response.data.user.role
-            ),
-          );
+              // response.data.user.role
+              ),
+              );
+              // console.log(response.data.AccessToken)
         }else{
           dispatch(
             reqFailure(
@@ -106,42 +106,43 @@ export const logUserIn = (loginData) => {
   };
 };
 
-// export const tokenRetriever = () => {
-//   // console.log('login works567');
-//   return async (dispatch) => {
-//     // console.log('login works123');
-//     dispatch(req());
-//     try {
-//       const userData = await AsyncStorage.getItem('AuthToken');
-//       const loggedData = userData != null ? JSON.parse(userData) : null;
-//       console.log('login works', loggedData);
-//       if (loggedData != null) {
-//         dispatch(
-//           reqSuccess(
-//             loggedData.email,
-//             loggedData.firstName,
-//             loggedData.lastName,
-//             loggedData.id,
-//             loggedData.accessToken,
-//             loggedData.role
-//           )
-//         );
-//       } else {
-//         //? LOGGING USER OUT.
-//         console.log('token retriever error 1: ');
+export const tokenRetriever = () => {
+  console.log('login works567');
+  return async (dispatch) => {
+    console.log('login works123');
+    dispatch(req());
+    try {
+      const userData = await AsyncStorage.getItem('byitAuthToken');
+      const loggedData = userData != null ? JSON.parse(userData) : null;
+      console.log('login works 2', userData);
+      console.log('login works', loggedData);
+      if (loggedData != null) {
+        dispatch(
+          reqSuccess(
+            // loggedData.email,
+            // loggedData.firstName,
+            // loggedData.lastName,
+            // loggedData.id,
+            loggedData.accessToken,
+            // loggedData.role
+          )
+        );
+      } else {
+        //? LOGGING USER OUT.
+        console.log('token retriever error 1: ');
 
-//         dispatch(logout());
-//         dispatch(reqFailure(''));
-//       }
-//     } catch (err) {
-//       //? ERROR RETRIEVING ASYNC STORAGE DATA.
-//       console.log('token retriever error: ', err.message);
-//       //? here, the loginFailure action sets the loading to false automatically.
-//       dispatch(logUserOut());
-//       dispatch(reqFailure(''));
-//     }
-//   };
-// };
+        dispatch(logout());
+        dispatch(reqFailure(''));
+      }
+    } catch (err) {
+      //? ERROR RETRIEVING ASYNC STORAGE DATA.
+      console.log('token retriever error: ', err.message);
+      //? here, the loginFailure action sets the loading to false automatically.
+      dispatch(logUserOut());
+      dispatch(reqFailure(''));
+    }
+  };
+};
 
 
 export const logout = () => ({
