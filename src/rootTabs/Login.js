@@ -18,7 +18,7 @@ import { logUserIn } from '../../redux/auth/action';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const Login = () => {
+const Login = ({navigation}) => {
   const [buttonDisabled, setButtonDisabled] = useState(false)
   const [passwordVisible, setPasswordVisible] = useState(true)
   const loginFormState = useSelector((state) => state.loginFormState);
@@ -192,7 +192,7 @@ const Login = () => {
                 justifyContent: 'center',
                 alignItems: "center",
                 alignSelf: 'center',
-                backgroundColor: '#4CA6A8',
+                backgroundColor: '#63B2FB',
                 borderRadius: 10,
               }}
             >
@@ -224,6 +224,24 @@ const Login = () => {
             }}
               onPress={() => navigation.navigate('resetpassword')}>Forgot Password?</Text>
           </View>
+          <View style={{
+            // backgroundColor: 'yellow',
+            marginLeft: 40,
+            fontSize: 16,
+            // alignItems: 'center',
+            alignContent: 'flex-end',
+            alignSelf: 'baseline',
+            width: '30%',
+            marginTop: '25%'
+          }}>
+            <Text style={{
+              textAlign: 'right',
+              fontSize: 14,
+              color: '#000',
+              fontWeight: "400"
+            }}
+              onPress={() => navigation.navigate('register')}>Sign Up</Text>
+          </View>
         </View>
       </LinearGradient>
     </View >
@@ -236,6 +254,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff'
+  },
+  linearGradient: {
+    flex: 1
   },
   mail: {
     // backgroundColor: 'grey',
