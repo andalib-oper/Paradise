@@ -17,6 +17,7 @@ const Register = ({navigation}) => {
   const [phone, setPhone] = useState();
   const onSubmitHandler = () => {
     console.log('object');
+    navigation.navigate('createpassword')
   };
   return (
     <View style={styles.container}>

@@ -4,6 +4,9 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Home from '../src/mainTabs/HomeScreen/Home';
 import 'react-native-gesture-handler';
+import PackageNavigator from './PackageNavigator';
+import BookingsNavigator from './BookingsNavigator'
+import ProfileNavigator from './ProfileNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -25,11 +28,11 @@ const mainNavigator = () => {
         ),
         }}
         />
-        {/* <Tab.Screen name="services" component={ServiceNavigator} 
+         <Tab.Screen name="packages" component={PackageNavigator} 
          options={{
-          tabBarLabel: 'Services',
+          tabBarLabel: 'Packages',
           tabBarIcon: ({ color }) => (
-            <MaterialIcons name="home-repair-service" color={color} size={26} />
+            <MaterialCommunityIcons name="package-variant-closed" color={color} size={26} />
           ),
         }}
       />
@@ -48,7 +51,7 @@ const mainNavigator = () => {
           <MaterialCommunityIcons name="account" color={color} size={26} />
         ),
       }}
-    /> */}
+    /> 
     </Tab.Navigator>
   );
 };

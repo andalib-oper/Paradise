@@ -10,14 +10,14 @@ import {
 
 
 const initialState = {
-    isLoggedIn: false,
+    isLoggedIn: true,
     email: "",
     firstName: "",
     lastName: "",
     id: "",
     accessToken: "",
-    refreshToken: "",
-    // role: "",
+    // refreshToken: "",
+    role: "",
     loading: "",
     error: ""
   };
@@ -41,7 +41,7 @@ const initialState = {
           lastName: action.lastName,
           id: action.id,
           accessToken: action.accessToken,
-          // role: action.role,
+          role: action.role,
           isLoggedIn: true,
           error: '',
         };
