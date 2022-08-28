@@ -2,11 +2,11 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Home from '../src/mainTabs/HomeScreen/Home';
 import 'react-native-gesture-handler';
 import PackageNavigator from './PackageNavigator';
 import BookingsNavigator from './BookingsNavigator'
 import ProfileNavigator from './ProfileNavigator';
+import HomeNavigator from './HomeNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -20,7 +20,7 @@ const mainNavigator = () => {
       headerShown: false
     }}
     initialRouteName="home">
-      <Tab.Screen name="home" component={Home}
+      <Tab.Screen name="homeNavigator" component={HomeNavigator}
       options={{
         tabBarLabel: 'Home',
         tabBarIcon: ({ color }) => (
@@ -28,7 +28,7 @@ const mainNavigator = () => {
         ),
         }}
         />
-         <Tab.Screen name="packages" component={PackageNavigator} 
+         <Tab.Screen name="packagesNavigator" component={PackageNavigator} 
          options={{
           tabBarLabel: 'Packages',
           tabBarIcon: ({ color }) => (
@@ -36,7 +36,7 @@ const mainNavigator = () => {
           ),
         }}
       />
-      <Tab.Screen name="bookings" component={BookingsNavigator} 
+      <Tab.Screen name="bookingsNavigator" component={BookingsNavigator} 
        options={{
         tabBarLabel: 'Bookings',
         tabBarIcon: ({ color }) => (
@@ -44,7 +44,7 @@ const mainNavigator = () => {
         ),
       }}
     />
-    <Tab.Screen name="profile" component={ProfileNavigator} 
+    <Tab.Screen name="profileNavigator" component={ProfileNavigator} 
        options={{
         tabBarLabel: 'Profile',
         tabBarIcon: ({ color }) => (
