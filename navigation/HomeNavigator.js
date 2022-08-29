@@ -23,6 +23,7 @@ const HomeNavigator = ({navigation,route}) => {
             <Stack.Screen name='home' component={Home} 
             options={{
               headerTitle: 'Home',
+              headerStyle: { backgroundColor: '#C2F1FF',},
               headerLeft: () => (
                 <MaterialIcons
                   name="arrow-back"
@@ -35,6 +36,7 @@ const HomeNavigator = ({navigation,route}) => {
             <Stack.Screen name='details' component={Details} 
             options={{
               headerTitle: 'Book Now',
+              headerStyle: { backgroundColor: '#C2F1FF',},
               headerLeft: () => (
                 <MaterialIcons
                   name="arrow-back"
