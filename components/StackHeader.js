@@ -4,9 +4,6 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import Feather from 'react-native-vector-icons/Feather'
 import { useNavigation } from '@react-navigation/native'
 import OptionsMenu from "react-native-option-menu";
-import Products from '../src/mainTabs/ProductsScreen/products'
-import MoreOptionModal from './moreOptionModal'
-import MoreOptionEdit from './MoreOptionEdit'
 
 const StackHeader = (prop) => {
     const navigation = useNavigation()
@@ -53,26 +50,29 @@ const height = Dimensions.get('window').height
 const styles = StyleSheet.create({
     header: {
         width: width / 1,
-        backgroundColor: '#fff',
-        height: height / 16,
+        backgroundColor: '#C2F1FF',
+        height: height / 14,
         elevation: 5,
         flexDirection: 'row'
     },
     icon: {
-        margin: '3%',
-        width: '10%'
+        marginTop: '4%',
+        marginLeft: '3%',
+        width: '8%'
     },
     nameView: {
-        margin: '3%',
+        marginTop: '3%',
+        marginLeft: '3%',
         width: '40%',
     },
     name: {
-        fontSize: 18,
+        fontSize: 20,
         color: 'black',
+        // textAlign: 'center',
         fontWeight: '600'
     },
     iconFilter: {
-        marginLeft: '20%',
+        marginLeft: '30%',
         marginTop: '3%'
     },
     iconMenu: {

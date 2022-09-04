@@ -1,0 +1,1 @@
+export const RazorpayApiKey = "rzp_test_wJHRrVvmMKlou7"

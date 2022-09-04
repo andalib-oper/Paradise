@@ -6,7 +6,7 @@ import Details from '../src/mainTabs/HomeScreen/Details';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 const Stack = createStackNavigator();
-const tabHiddenRoutes = ["booknow"];
+const tabHiddenRoutes = ["details"];
 
 
 const HomeNavigator = ({navigation,route}) => {

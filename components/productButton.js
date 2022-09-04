@@ -1,130 +1,166 @@
-import { StyleSheet, Text, View, Dimensions, TouchableOpacity, Image, ImageBackground } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
-import ImageOverlay from 'react-native-image-overlay';
-import Overlay from 'react-native-modal-overlay';
-import { getAllProducts, setProduct } from '../redux/Products/actions';
-import OrientationLoadingOverlay from 'react-native-orientation-loading-overlay';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
+import React from 'react';
+import LinearGradient from 'react-native-linear-gradient';
+import {useNavigation} from '@react-navigation/native';
+
+const place = [
+  {
+    name: 'Kashnmir',
+    tripDays: '10',
+    image: 'https://i.imgur.com/UPrs1EWl.jpg',
+    price: '6000',
+    offer: '35%',
+  },
+  {
+    name: 'Kashnmir',
+    tripDays: '10',
+    image: 'https://i.imgur.com/UPrs1EWl.jpg',
+    price: '6000',
+    offer: '35%',
+  },
+  {
+    name: 'Kashnmir',
+    tripDays: '10',
+    image: 'https://i.imgur.com/UPrs1EWl.jpg',
+    price: '6000',
+    offer: '35%',
+  },
+  {
+    name: 'Kashnmir',
+    tripDays: '10',
+    image: 'https://i.imgur.com/UPrs1EWl.jpg',
+    price: '6000',
+    offer: '35%',
+  },
+];
+
+const ProductButton = () => {
+  const navigation = useNavigation();
+  return (
+    <View style={styles.container}>
+      <LinearGradient
+        colors={['#C2F1FF', '#F5F5F5']}
+        style={styles.linearGradient}>
+        {place.map(item => {
+          return (
+            <View>
+              <View style={styles.recomView}>
+                <Text
+                  style={{
+                    textAlign: 'left',
+                    color: '#000',
+                    fontSize: 16,
+                    fontWeight: '600',
+                    marginTop: '5%',
+                    marginLeft: '8%',
+                  }}>
+                  {item.name}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    color: 'grey',
+                    marginTop: '2%',
+                    marginLeft: '8%',
+                  }}>
+                  {item.tripDays}
+                  {'\b'}Days Trips
+                </Text>
+                <Image
+                  style={{
+                    margin: '5%',
+                    alignSelf: 'center',
+                    borderRadius: 10,
+                    width: windowWidth / 1.4,
+                    height: windowHeight / 5,
+                  }}
+                  source={{
+                    uri: item.image,
+                  }}
+                />
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    marginBottom: '5%',
+                  }}>
+                  <View
+                    style={{
+                      width: '40%',
+                      // backgroundColor: 'red',
+                      marginLeft: '8%',
+                    }}>
+                    <Text
+                      style={{
+                        textAlign: 'left',
+                        fontSize: 14,
+                        color: 'grey',
+                        marginTop: '2%',
+                        //  marginLeft: '8%',
+                      }}>
+                      Rs. {item.price} {'\b \b'}
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          color: 'green',
+                          marginTop: '2%',
+                          marginLeft: '8%',
+                        }}>
+                        {item.offer} off
+                      </Text>
+                    </Text>
+                  </View>
+                  <View style={{marginLeft: '20%'}}>
+                    <TouchableOpacity
+                      onPress={() => navigation.navigate('details')}
+                      style={styles.bookNow}>
+                      <Text style={{color: '#fff'}}>View Details</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            </View>
+          );
+        })}
+        <View style={{marginBottom: '10%'}}></View>
+      </LinearGradient>
+    </View>
+  );
+};
+
+export default ProductButton;
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-
-const ProductButton = () => {
-    // console.log("hit on product")
-    const navigation = useNavigation();
-    const productState = useSelector((state) => state.productState)
-    const authState = useSelector((state) => state.authState)
-    const dispatch = useDispatch();
-    useEffect(() => {
-        dispatch(getAllProducts(authState.id));
-    }, [dispatch]);
-    // console.log("hit on product6")
-    return (
-        <View>
-            {/* <OrientationLoadingOverlay
-               visible={productState.loading}
-               color="white"
-               indicatorSize="large"
-               messageFontSize={24}/> */}
-               {/* <Text>hit on</Text> */}
-            <View style={styles.grid}>
-                {productState.data && productState.data
-                    .map((item) => {
-                        return (
-                            //  <TouchableOpacity onPress={()=> console.log(item._id)}>
-                              <TouchableOpacity style={styles.gridItem} onPress={() => navigation.navigate('editProducts',{ productId: item._id})}> 
-                                {/* <View style={styles.deactivateOverlay}> */}
-                                <View style={styles.box2ItemInner}>
-                                    {/* {productState.data && productState.data
-                                        .map((img) => {
-                                            return (
-                                                <View>
-                                                    <Image source={img.productImage}
-                                                        // key={dest.destinationId}
-                                                        style={{ height: 200, width: 600 }}
-                                                        resizeMode='contain' />
-                                                </View>
-                                            )
-                                        })} */}
-                                    <Image
-                                        style={styles.image}
-                                        // source={{
-                                        //     // uri: 'https://res.cloudinary.com/dantech54353/image/upload/v1657883960/kkuzl73daydgehodpvkj.jpg'
-                                        // uri: item.productImage
-                                        // }} 
-                                        source={{uri:(item.productImage[0])?item.productImage[0]:'https://res.cloudinary.com/dantech54353/image/upload/v1657883960/kkuzl73daydgehodpvkj.jpg'}}
-                                        />
-                                    <Text style={styles.box2text}>{item.name}</Text>
-                                    {/* <Text style={styles.box2text}>name</Text> */}
-                                    {/* </View> */}
-                                </View>
-                            </TouchableOpacity>
-                        )
-                    })}
-            </View>
-            {/* <Text>hit still working</Text> */}
-        </View>
-    )
-}
-
-export default ProductButton
-
 const styles = StyleSheet.create({
-    grid: {
-        position: 'relative',
-        justifyContent: 'center',
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        flex: 1,
-        borderRadius: 20,
-        // paddingTop: 10,
-        paddingBottom: 30,
-        // marginTop: '1%',
-    },
-    gridItem: {
-        // margin: 5,
-        width: windowWidth / 2.4,
-        height: windowHeight / 3.2,
-        // backgroundColor: 'pink',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 20,
-    },
-    gridItemView: {
-        margin: 5,
-        width: windowWidth / 2.4,
-        height: windowHeight / 3.2,
-        // backgroundColor: 'pink',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 20,
-    },
-    box2ItemInner: {
-        // backgroundColor: 'red',
-        alignSelf: 'center',
-        alignItems: 'center',
-    },
-    box2text: {
-        // justifyContent: "center",
-        // alignSelf: 'center',
-        textAlign: 'left',
-        // backgroundColor: 'orange',
-        marginTop: '5%',
-        fontWeight: '400',
-        fontSize: 16,
-        color: 'black',
-        width: 'auto',
-    },
-    image: {
-        width: windowWidth / 2.8,
-        height: windowWidth / 2.5
-    },
-    deactivateOverlay: {
-        backgroundColor: "grey",
-        opacity: 0.3
-    }
-})
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  //   linearGradient: {
+  //     width: windowWidth / 1,
+  //     // height: 300,
+  //   },
+  recomView: {
+    marginBottom: '5%',
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    alignSelf: 'center',
+    width: windowWidth / 1.2,
+    height: 'auto',
+  },
+  bookNow: {
+    backgroundColor: '#63B2FB',
+    width: 'auto',
+    height: 'auto',
+    padding: 5,
+    borderRadius: 10,
+  },
+});

@@ -14,6 +14,7 @@ import Carousel, {getInputRangeFromIndexes} from 'react-native-snap-carousel';
 import {Rating, AirbnbRating} from 'react-native-ratings';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import CalendarPicker from 'react-native-calendar-picker';
+import RazorpayCheckout from 'react-native-razorpay';
 import moment from 'moment';
 import React from 'react';
 import {useState} from 'react';
@@ -164,6 +165,14 @@ const BookNow = ({navigation}) => {
   const onStarRatingPress = rating => {
     setStarCount({startCount: rating});
   };
+
+  const [payment, setPayment] = useState({
+   product: {
+      title: "Kashmir",
+      description: "this is kashmir",
+      amount : "500"
+    },
+  })
   return (
     <View>
       <ScrollView>
@@ -311,7 +320,27 @@ const BookNow = ({navigation}) => {
           </View>
           <View>
             <TouchableOpacity
-              onPress={() => navigation.navigate('details')}
+              onPress={() => {
+                // const amount = '2000'
+                var options = {
+                  name: payment?.product?.title,
+                  description: payment?.product?.description,
+                  image: 'https://i.imgur.com/3g7nmJC.png',
+                  currency: 'INR',
+                  key: 'rzp_test_wJHRrVvmMKlou7', // Your api key
+                  amount: payment?.product?.amount,
+                  theme: {color: '#C2F1FF'},
+                };
+                RazorpayCheckout.open(options)
+                  .then(data => {
+                    // handle success
+                    alert(`Success: ${data.razorpay_payment_id}`);
+                  })
+                  .catch(error => {
+                    // handle failure
+                    alert(`Error: ${error.code} | ${error.description}`);
+                  });
+              }}
               style={styles.bookNow}>
               <Text
                 style={{
