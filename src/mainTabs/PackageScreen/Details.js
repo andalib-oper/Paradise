@@ -341,6 +341,7 @@ import {
                       alert(`Error: ${error.code} | ${error.description}`);
                     });
                 }}
+                // card no:-5267 3181 8797 5449
                 style={styles.bookNow}>
                 <Text
                   style={{
