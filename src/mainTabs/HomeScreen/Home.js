@@ -11,6 +11,7 @@ import Carousel from 'react-native-snap-carousel';
 import SearchBar from 'react-native-dynamic-search-bar';
 import LinearGradient from 'react-native-linear-gradient';
 import {ScrollView} from 'react-native-gesture-handler';
+import { useSelector } from 'react-redux';
 
 const horizontalMargin = 10;
 const slideWidth = 280;
@@ -67,6 +68,8 @@ const place = [
   },
 ];
 const Home = ({navigation}) => {
+  const authState = useSelector((state)=> state.authState)
+  console.log("home screen", authState.id)
   const onSubmit = () => {
     console.log('first');
   };

@@ -25,18 +25,18 @@ const Login = ({navigation}) => {
   const dispatch = useDispatch();
   const authState = useSelector(state => state.authState);
   useEffect(() => {
-    // console.log("token", authState)
+    console.log("token", authState)
     dispatch(stateCleanup());
   }, [dispatch]);
-  // console.log("mail", loginFormState)
   const onSubmitHandler = () => {
+    console.log("mail", loginFormState)
     if (
       loginFormState.inputValidity.email &&
       loginFormState.inputValidity.password
     ) {
-      // console.log('All fields validated');
+      console.log('All fields validated');
       dispatch(logUserIn(loginFormState.inputValues));
-      // console.log("ok", authState)
+      console.log("ok", authState)
       //* the log in and all the checks are now happening via redux thunk. All we have to do now is to redirect the user based on the state.
     }
     else {
@@ -55,7 +55,8 @@ const Login = ({navigation}) => {
 
   const checkValidity = (val, fieldId) => {
     let isValid = true;
-    if (fieldId === 'email' && !emailRegex.test(String(val).toLowerCase())) {
+    if (fieldId === 'email') {
+      // && !emailRegex.test(String(val).toLowerCase())
       isValid = false;
     }
 

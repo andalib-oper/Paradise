@@ -8,9 +8,9 @@ export const Input = (props) => {
         <View>
     <TextInput
     {...props}
-            style={styles.input}
+            // style={styles.input}
             error = {!props.inputIsValid && props.inputIsTouched}
-            placeholder={props.name}
+            placeholder={props.placeholder}
             placeholderTextColor={colors.black}
             // value={props.value}
         />

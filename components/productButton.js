@@ -144,12 +144,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  //   linearGradient: {
-  //     width: windowWidth / 1,
-  //     // height: 300,
-  //   },
   recomView: {
-    marginBottom: '5%',
+    marginBottom: '8%',
     backgroundColor: '#fff',
     borderRadius: 10,
     alignSelf: 'center',

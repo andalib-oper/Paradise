@@ -19,7 +19,7 @@ const Packages = () => {
   const countries = ["Egypt", "Canada", "Australia", "Ireland"]
   const price = ["Egypt", "Canada", "Australia", "Ireland"]
   return (
-    <View>
+    <View style={styles.container}>
        <StackHeader
        headerName="Package"
        name="arrow-left"
@@ -33,7 +33,9 @@ const Packages = () => {
      />
       <ScrollView>
         {filterVisible ? (
-          <View>
+          <View style={{
+            // backgroundColor: 'yellow'
+          }}>
             <View
               style={{
                 marginTop: '1%',
@@ -126,25 +128,7 @@ const Packages = () => {
               />
             </View>
             <View style={styles.headerButton}>
-              <View
-                style={{
-                  // marginLeft: '10%'
-                  // justifyContent: 'flex-end',
-                  width: '30%',
-                  // backgroundColor: 'red'
-                }}>
-                <TouchableOpacity
-                  style={styles.searchButton}
-                  // onPress={() => cancelFilter()}>
-                  onPress={()=> console.log("object")}>
-                  <Text style={styles.search}>Cancel</Text>
-                </TouchableOpacity>
-              </View>
-              <View
-                style={{
-                  width: '30%',
-                  // backgroundColor: 'pink'
-                }}>
+              <View>
                 <TouchableOpacity
                   style={styles.searchButton}
                   // onPress={() => filterAply()}>
@@ -169,7 +153,7 @@ const windowHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#C2F1FF',
   },
   animation: {
     width: windowWidth / 4,
@@ -253,9 +237,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   searchButton: {
-    alignSelf: 'center',
+    alignSelf: 'flex-end',
     // marginLeft: '10%',
-    // marginRight: '10%',
+    marginRight: '10%',
     marginTop: '5%',
     marginBottom: '5%',
     backgroundColor: 'blue',
@@ -273,8 +257,8 @@ const styles = StyleSheet.create({
   headerButton: {
     // marginBottom: '5%',
     justifyContent: 'center',
-    marginTop: '5%',
-    flexDirection: 'row',
-    backgroundColor: 'white',
+    // marginTop: '5%',
+    // flexDirection: 'row',
+    backgroundColor: '#C2F1FF',
   },
 });

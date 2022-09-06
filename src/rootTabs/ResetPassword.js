@@ -121,8 +121,8 @@ const ResetPassword = ({ navigation }) => {
                 alignItems: 'center'
             }}>
                 <TouchableOpacity
-                    // onPress={() => onSubmitHandler()}
-                    onPress={()=>navigation.navigate('updatepassword')}
+                    onPress={() => onSubmitHandler()}
+                    // onPress={()=>navigation.navigate('updatepassword')}
                     style={styles.button}
                 >
                     <Text style={styles.buttonText}>Reset</Text>
