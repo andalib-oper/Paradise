@@ -82,7 +82,7 @@ export const newPassword = (data) => {
             // console.log("passowrd token", accessToken)
             const response = await axios.post(
                 // IAMURL +
-                'https://byit-be-iam.herokuapp.com/api/auth/reset',
+                'https://paradis-be-iam.herokuapp.com/api/auth/reset',
                 {
                     email: data.email,
                     password: data.cpassword

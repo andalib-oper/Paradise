@@ -223,7 +223,7 @@ const Login = ({navigation}) => {
               color: '#000',
               fontWeight: "400"
             }}
-              onPress={() => navigation.navigate('resetpassword')}>Forgot Password?</Text>
+              onPress={() => navigation.navigate('updatepassword')}>Forgot Password?</Text>
           </View>
           <View style={{
             // backgroundColor: 'yellow',

@@ -36,23 +36,25 @@ const UpdatePassword = ({ navigation }) => {
     }
     const onSubmitHandler = () => {
         if (
-            //    profileState.inputValidity.email,
+               emailFormState.inputValidity.email,
             emailFormState.inputValidity.npassword ==
             emailFormState.inputValidity.cpassword
         ) {
             console.log('All fields validated');
             // console.log(authState.accessToken)
             dispatch(newPassword(emailFormState.inputValues));
-            // Alert.alert("Successfully updated password")
+            Alert.alert("Successfully updated password")
+            navigation.navigate('login')
             // dispatch(logUserOut())
             // console.log("ok", authState)
             //* the log in and all the checks are now happening via redux thunk. All we have to do now is to redirect the user based on the state.
         } else {
-            showMessage({
-                message: 'Invalid inputs',
-                description: 'Please check your inputs before proceeding',
-                type: 'warning',
-            });
+            // showMessage({
+            //     message: 'Invalid inputs',
+            //     description: 'Please check your inputs before proceeding',
+            //     type: 'warning',
+            // });
+            Alert.alert("Email is not registered")
         }
     }
     return (
@@ -89,9 +91,34 @@ const UpdatePassword = ({ navigation }) => {
                 marginTop: '15%',
 
             }}>
-                <View style={{
-                    // backgroundColor: 'pink'
+                 <View style={styles.mail}>
+                <Text style={{
+                    textAlign: 'left',
+                    fontSize: 14,
+                    marginLeft: 20,
+                    color: '#000'
                 }}>
+                    Email/Phone
+                </Text>
+                <View style={{
+                    // backgroundColor: 'pink',
+                    // marginTop: '5%',
+                    width: '90%'
+                }}>
+                    <TextInput
+                        value={emailFormState.inputValues.email}
+                        inputIsValid={emailFormState.inputValidity.email}
+                        inputIsTouched={emailFormState.isTouched.email}
+                        style={styles.input}
+                        onChangeText={(val) => checkValidity(val, 'email')}
+                        onBlur={() => {
+                            blurListener('email');
+                        }}
+                        placeholder="Enter your email address/ phone number"
+                    />
+                </View>
+            </View>
+                <View style={styles.mail}>
                     <Text style={{
                         textAlign: 'left',
                         fontSize: 14,
@@ -134,9 +161,7 @@ const UpdatePassword = ({ navigation }) => {
                         </View>
                     </View>
                 </View>
-                <View style={{
-                    // backgroundColor: 'orange'
-                }}>
+                <View style={styles.mail}>
                     <Text style={{
                         textAlign: 'left',
                         fontSize: 14,
@@ -232,6 +257,13 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: '600',
         color: 'white'
+    },
+    mail: {
+        // backgroundColor: 'grey',
+        // marginTop: '20%',
+        marginLeft: 15,
+        marginRight: 20,
+        justifyContent: 'center'
     },
 })
 export default UpdatePassword;
