@@ -8,6 +8,7 @@ import {
   Pressable,
   Modal,
   TouchableOpacity,
+  TextInput,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Carousel, {getInputRangeFromIndexes} from 'react-native-snap-carousel';
@@ -16,8 +17,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import CalendarPicker from 'react-native-calendar-picker';
 import RazorpayCheckout from 'react-native-razorpay';
 import moment from 'moment';
-import React from 'react';
-import {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 const {width: viewportWidth, height: viewportHeight} = Dimensions.get('window');
 const carouselItem = [
@@ -52,8 +52,12 @@ const carouselItem = [
       'https://media.istockphoto.com/photos/beautiful-view-of-dal-lake-in-winter-srinagar-kashmir-india-picture-id1323846766?b=1&k=20&m=1323846766&s=170667a&w=0&h=ax37KHHN6VL7ESLPhlDkva26WZdDu8DFSHLIuEDTNY8=',
   },
 ];
-const BookNow = ({navigation}) => {
+const BookNow = ({navigation, route}) => {
+  const {packageId} = route.params;
+  const [text, onChangeText] = useState();
+  const [number, onChangeNumber] = useState();
   const [starCount, setStarCount] = useState();
+  const [res, setRes] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedStartDate, setSelectedStartDate] = useState(
     moment().format('YYYY-MM-DD'),
@@ -74,10 +78,10 @@ const BookNow = ({navigation}) => {
     setModalVisible(!modalVisible);
   };
   const onSubmit = () => {
-    // dispatch(getAllStore(authState.id, maxDate,minDate));
-    // dispatch(getAllDistributor(authState.id,maxDate,minDate));
     modelClose();
   };
+  console.log('persond day', text, number);
+  console.log('selected date', selectedStartDate, selectedEndDate);
   const WATER_IMAGE = require('../../../images/star.png');
 
   const ratingCompleted = rating => {
@@ -167,193 +171,225 @@ const BookNow = ({navigation}) => {
   };
 
   const [payment, setPayment] = useState({
-   product: {
-      title: "Kashmir",
-      description: "this is kashmir",
-      amount : "500"
+    product: {
+      title: 'Kashmir',
+      description: 'this is kashmir',
+      amount: '500',
     },
-  })
+  });
+
+  useEffect(() => {
+    const url = `https://paradis-be-iam.herokuapp.com/api/package/${packageId}`;
+
+    const fetchData = async () => {
+      try {
+        const response = await fetch(url);
+        const json = await response.json();
+        console.log(json);
+        setRes(json);
+      } catch (error) {
+        console.log('error', error);
+      }
+    };
+    fetchData();
+  }, []);
+  console.log('197', res);
   return (
     <View>
+      {/* <Text>id: {packageId}</Text> */}
       <ScrollView>
+        {/* <OrientationLoadingOverlay
+        visible={res.state? true: false}
+        color="white"
+        indicatorSize="large"
+        messageFontSize={24}
+        message="Loading... 😀😀😀"
+        /> */}
         <LinearGradient colors={['#C2F1FF', '#F5F5F5']}>
-          <View style={styles.map}>
-            <Carousel
-              // other props
-              data={carouselItem}
-              renderItem={renderItem}
-              layout={'tinder'}
-              loop={true}
-              loopClonesPerSide={2}
-              autoplay={true}
-              // sliderHeight={windowHeight/2}
-              autoplayDelay={500}
-              autoplayInterval={3000}
-              sliderWidth={sliderWidth}
-              itemWidth={itemWidth}
-              scrollInterpolator={scrollInterpolator}
-              slideInterpolatedStyle={animatedStyles}
-              useScrollView={true}
-            />
-          </View>
-          <View>
-            <Text
-              style={{
-                textAlign: 'left',
-                color: '#000',
-                fontSize: 20,
-                fontWeight: '600',
-                marginTop: '5%',
-                marginLeft: '10%',
-              }}>
-              Kashmir
-            </Text>
-          </View>
-          <View>
-            <Text
-              style={{
-                textAlign: 'left',
-                color: 'grey',
-                fontSize: 14,
-                fontWeight: '400',
-                marginTop: '1%',
-                marginLeft: '10%',
-              }}>
-              Famous for Holiday
-            </Text>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              marginLeft: '10%',
-              // backgroundColor: 'pink'
-            }}>
-            <View>
-              <Rating
-                type="custom"
-                ratingImage={WATER_IMAGE}
-                // ratingColor="#3498db"
-                // ratingBackgroundColor="#c8c7c8"
-                // startingValue={ratingCount/2}
-                // showRating={}
-                ratingCount={5}
-                imageSize={20}
-                onFinishRating={ratingCompleted}
-                style={{marginTop: '2%'}}
-              />
-            </View>
-            <View
-              style={{
-                // backgroundColor: 'pink',
-                width: '25%',
-                marginLeft: '50%',
-                // marginTop: 5,
-              }}>
-              <Pressable
-                style={[styles.button1]}
-                onPress={() => setModalVisible(true)}>
-                <AntDesign name="calendar" size={20} color="black" />
-              </Pressable>
-            </View>
-          </View>
-          <View>
-            <Text
-              style={{
-                textAlign: 'left',
-                color: 'grey',
-                fontSize: 14,
-                fontWeight: '400',
-                marginTop: '1%',
-                marginLeft: '10%',
-              }}>
-              MRP Rs 4000
-            </Text>
-          </View>
-          <View>
-            <Text
-              style={{
-                textAlign: 'left',
-                color: '#000',
-                fontSize: 20,
-                fontWeight: '600',
-                marginTop: '5%',
-                marginLeft: '10%',
-              }}>
-              Places To Visit
-            </Text>
-            <Image
-              style={{
-                margin: '5%',
-                borderRadius: 10,
-                width: windowWidth / 1.4,
-                alignSelf: 'center',
-                height: windowHeight / 5,
-              }}
-              source={{
-                uri: 'https://media.istockphoto.com/photos/beautiful-view-of-dal-lake-in-winter-srinagar-kashmir-india-picture-id1323846766?b=1&k=20&m=1323846766&s=170667a&w=0&h=ax37KHHN6VL7ESLPhlDkva26WZdDu8DFSHLIuEDTNY8=',
-              }}
-            />
-            <Text
-              style={{
-                textAlign: 'left',
-                color: 'grey',
-                fontSize: 14,
-                fontWeight: '400',
-                marginTop: '1%',
-                marginLeft: '10%',
-                marginBottom: '2%',
-              }}>
-              <Text
-                style={{
-                  color: 'black',
-                  fontSize: 16,
-                  fontWeight: '500',
-                }}>
-                Srinagar{'\n'}
-              </Text>
-              {'\n'}
-              Irure laboris nulla nostrud dolor reprehenderit amet. Pariatur ad
-              quis proident fugiat deserunt quis laboris. Veniam nostrud eiusmod
-              incididunt ipsum enim eiusmod fugiat in Lorem. Voluptate velit est
-              excepteur amet qui adipisicing fugiat.
-            </Text>
-          </View>
-          <View>
-            <TouchableOpacity
-              onPress={() => {
-                // const amount = '2000'
-                var options = {
-                  name: payment?.product?.title,
-                  description: payment?.product?.description,
-                  image: 'https://i.imgur.com/3g7nmJC.png',
-                  currency: 'INR',
-                  key: 'rzp_test_wJHRrVvmMKlou7', // Your api key
-                  amount: payment?.product?.amount,
-                  theme: {color: '#C2F1FF'},
-                };
-                RazorpayCheckout.open(options)
-                  .then(data => {
-                    // handle success
-                    alert(`Success: ${data.razorpay_payment_id}`);
-                  })
-                  .catch(error => {
-                    // handle failure
-                    alert(`Error: ${error.code} | ${error.description}`);
-                  });
-              }}
-              style={styles.bookNow}>
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontWeight: '500',
-                  textAlign: 'center',
-                  marginTop: '3%',
-                  color: '#fff',
-                }}>
-                Book Now
-              </Text>
-            </TouchableOpacity>
-          </View>
+          {/* {res && res?.map(item => {
+              console.log('object', res);
+              return ( */}
+                <View>
+                  <View style={styles.map}>
+                    <Carousel
+                      // other props
+                      data={carouselItem}
+                      renderItem={renderItem}
+                      layout={'tinder'}
+                      loop={true}
+                      loopClonesPerSide={2}
+                      autoplay={true}
+                      // sliderHeight={windowHeight/2}
+                      autoplayDelay={500}
+                      autoplayInterval={3000}
+                      sliderWidth={sliderWidth}
+                      itemWidth={itemWidth}
+                      scrollInterpolator={scrollInterpolator}
+                      slideInterpolatedStyle={animatedStyles}
+                      useScrollView={true}
+                    />
+                  </View>
+                  <View>
+                    <Text
+                      style={{
+                        textAlign: 'left',
+                        color: '#000',
+                        fontSize: 20,
+                        fontWeight: '600',
+                        marginTop: '5%',
+                        marginLeft: '10%',
+                      }}>
+                      {res?.state}
+                    </Text>
+                  </View>
+                  <View>
+                    {/* <Text>id:{packageId}</Text> */}
+                    <Text
+                      style={{
+                        textAlign: 'left',
+                        color: 'grey',
+                        fontSize: 14,
+                        fontWeight: '400',
+                        marginTop: '1%',
+                        marginLeft: '10%',
+                      }}>
+                      {res?.inclusion}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      marginLeft: '10%',
+                      // backgroundColor: 'pink'
+                    }}>
+                    <View>
+                      <Rating
+                        type="custom"
+                        ratingImage={WATER_IMAGE}
+                        // ratingColor="#3498db"
+                        // ratingBackgroundColor="#c8c7c8"
+                        // startingValue={ratingCount/2}
+                        // showRating={}
+                        ratingCount={5}
+                        imageSize={20}
+                        onFinishRating={ratingCompleted}
+                        style={{marginTop: '2%'}}
+                      />
+                    </View>
+                    <View
+                      style={{
+                        // backgroundColor: 'pink',
+                        width: '25%',
+                        marginLeft: '50%',
+                        // marginTop: 5,
+                      }}>
+                      <Pressable
+                        style={[styles.button1]}
+                        onPress={() => setModalVisible(true)}>
+                        <AntDesign name="calendar" size={20} color="black" />
+                      </Pressable>
+                    </View>
+                  </View>
+                  <View>
+                    <Text
+                      style={{
+                        textAlign: 'left',
+                        color: 'grey',
+                        fontSize: 14,
+                        fontWeight: '400',
+                        marginTop: '1%',
+                        marginLeft: '10%',
+                      }}>
+                      MRP Rs {res?.price}
+                    </Text>
+                  </View>
+                  <View>
+                    <Text
+                      style={{
+                        textAlign: 'left',
+                        color: '#000',
+                        fontSize: 20,
+                        fontWeight: '600',
+                        marginTop: '5%',
+                        marginLeft: '10%',
+                      }}>
+                      Places To Visit
+                    </Text>
+                    <Image
+                      style={{
+                        margin: '5%',
+                        borderRadius: 10,
+                        width: windowWidth / 1.4,
+                        alignSelf: 'center',
+                        height: windowHeight / 5,
+                      }}
+                      source={{
+                        uri: 'https://media.istockphoto.com/photos/beautiful-view-of-dal-lake-in-winter-srinagar-kashmir-india-picture-id1323846766?b=1&k=20&m=1323846766&s=170667a&w=0&h=ax37KHHN6VL7ESLPhlDkva26WZdDu8DFSHLIuEDTNY8=',
+                      }}
+                    />
+                    <Text
+                      style={{
+                        textAlign: 'left',
+                        color: 'grey',
+                        fontSize: 14,
+                        fontWeight: '400',
+                        marginTop: '1%',
+                        marginLeft: '10%',
+                        marginBottom: '2%',
+                      }}>
+                      <Text
+                        style={{
+                          color: 'black',
+                          fontSize: 16,
+                          fontWeight: '500',
+                        }}>
+                        Srinagar{'\n'}
+                      </Text>
+                      {'\n'}
+                      {res?.overview}
+                    </Text>
+                  </View>
+                  <View>
+                    <TouchableOpacity
+                      onPress={() => {
+                        // const amount = '2000'
+                        var options = {
+                          name: res?.state,
+                          description: res?.overview,
+                          image: 'https://i.imgur.com/3g7nmJC.png',
+                          currency: 'INR',
+                          key: 'rzp_test_wJHRrVvmMKlou7', // Your api key
+                          amount: res?.price,
+                          theme: {color: '#C2F1FF'},
+                        };
+                        RazorpayCheckout.open(options)
+                          .then(data => {
+                            // handle success
+                            alert(`Success: ${data.razorpay_payment_id}`);
+                          })
+                          .catch(error => {
+                            // handle failure
+                            alert(
+                              `Error: ${error.code} | ${error.description}`,
+                            );
+                          });
+                      }}
+                      style={styles.bookNow}>
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          fontWeight: '500',
+                          textAlign: 'center',
+                          marginTop: '3%',
+                          color: '#fff',
+                        }}>
+                        Book Now
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              {/* );
+            })} */}
           <View>
             <Modal
               animationType="slide"
@@ -434,7 +470,27 @@ const BookNow = ({navigation}) => {
                       borderColor: 0,
                     }}
                   />
-                  <Pressable style={[styles.button]} onPress={onSubmit}>
+                  <View style={{
+                    // backgroundColor: 'pink',
+                    width: windowWidth/1.2,
+                    // height: 40
+                  }}>
+                  <TextInput
+                  placeholder='How Many Person?'
+                    style={styles.input}
+                    keyboardType='default'
+                    onChangeText={onChangeText}
+                    value={text}
+                  />
+                  {/* <TextInput
+                  placeholder='Start Date - End Date'
+                    style={styles.input}
+                    keyboardType="default"
+                    onChangeText={onChangeNumber}
+                    value={number}
+                  /> */}
+                  </View>
+                  <Pressable style={[styles.button]} onPress={() => onSubmit()}>
                     <Text style={styles.textStyle}>OK</Text>
                   </Pressable>
                 </View>
@@ -456,6 +512,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+  },
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
   },
   map: {
     width: windowWidth / 1,

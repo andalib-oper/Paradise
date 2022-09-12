@@ -10,8 +10,11 @@ import React from 'react';
 import Carousel from 'react-native-snap-carousel';
 import SearchBar from 'react-native-dynamic-search-bar';
 import LinearGradient from 'react-native-linear-gradient';
+import OrientationLoadingOverlay from 'react-native-orientation-loading-overlay'
 import {ScrollView} from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { useState } from 'react';
 
 const horizontalMargin = 10;
 const slideWidth = 280;
@@ -70,6 +73,7 @@ const place = [
 const Home = ({navigation}) => {
   const authState = useSelector((state)=> state.authState)
   console.log("home screen", authState.id)
+  const [res, setRes] = useState("")
   const onSubmit = () => {
     console.log('first');
   };
@@ -81,8 +85,31 @@ const Home = ({navigation}) => {
       </View>
     );
   };
+  useEffect(() => {
+    const url = "https://paradis-be-iam.herokuapp.com/api/package";
+
+    const fetchData = async () => {
+      try {
+        const response = await fetch(url);
+        const json = await response.json();
+        // console.log(json);
+        setRes(json);
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
+    fetchData();
+  }, []);
+  // console.log("object", res)
   return (
     <View style={styles.container}>
+      <OrientationLoadingOverlay
+        visible={authState.loading}
+        color="white"
+        indicatorSize="large"
+        messageFontSize={24}
+        message="Loading... 😀😀😀"
+      />
       <ScrollView>
         <LinearGradient
           colors={['#C2F1FF', '#F5F5F5']}
@@ -107,7 +134,8 @@ const Home = ({navigation}) => {
           <View>
             <Text style={styles.recomText}>Recommended</Text>
           </View>
-          {place.map(item => {
+          {res && res?.map((item) => {
+            console.log("130", item._id)
             return (
               <View>
                 <View style={styles.recomView}>
@@ -120,7 +148,7 @@ const Home = ({navigation}) => {
                       marginTop: '5%',
                       marginLeft: '8%',
                     }}>
-                    {item.name}
+                    {item?.state}
                   </Text>
                   <Text
                     style={{
@@ -129,7 +157,7 @@ const Home = ({navigation}) => {
                       marginTop: '2%',
                       marginLeft: '8%',
                     }}>
-                    {item.tripDays}{'\b'}Days Trips
+                    {item.duration}{'\b'}Trips
                   </Text>
                   <Image
                     style={{
@@ -140,7 +168,8 @@ const Home = ({navigation}) => {
                       height: windowHeight / 5,
                     }}
                     source={{
-                      uri: (item.image)
+                      // uri: "https://i.imgur.com/MABUbpDl.jpg"
+                      uri: (item.packageImage[0])? (item.packageImage[0]): "https://i.imgur.com/MABUbpDl.jpg"
                     }}
                   />
                   <View
@@ -170,13 +199,14 @@ const Home = ({navigation}) => {
                             marginTop: '2%',
                             marginLeft: '8%',
                           }}>
-                          {item.offer} off
+                          {item.inclusion}
                         </Text>
                       </Text>
                     </View>
                     <View style={{marginLeft: '20%'}}>
                       <TouchableOpacity
-                        onPress={() => navigation.navigate('details')}
+                        onPress={() => navigation.navigate('details',{ packageId: item._id})}
+                        // onPress={()=> console.log("object", item._id)}
                         style={styles.bookNow}>
                         <Text style={{color: '#fff'}}>View Details</Text>
                       </TouchableOpacity>
