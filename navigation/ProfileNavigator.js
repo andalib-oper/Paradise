@@ -37,7 +37,7 @@ const ProfileNavigator = ({navigation, route}) => {
             />
             <Stack.Screen name='editprofile' component={EditProfile} 
              options={{
-                headerShown: false,
+                headerShown: true,
                 headerStyle: { backgroundColor: '#C2F1FF',},
                 headerTitle: 'Edit Profile',
                 headerLeft: () => (

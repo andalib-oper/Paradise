@@ -15,6 +15,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { useState } from 'react';
+import StackHeader from '../../../components/StackHeader'
 
 const horizontalMargin = 10;
 const slideWidth = 280;
@@ -110,6 +111,9 @@ const Home = ({navigation}) => {
         messageFontSize={24}
         message="Loading... 😀😀😀"
       />
+       <StackHeader
+       headerName="Home"
+     />
       <ScrollView>
         <LinearGradient
           colors={['#C2F1FF', '#F5F5F5']}

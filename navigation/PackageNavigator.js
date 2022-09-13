@@ -27,7 +27,7 @@ const PackageNavigator = ({navigation, route}) => {
             />
             <Stack.Screen name='details' component={Details} 
              options={{
-                headerShown: true,
+              headerShown:false,
                 headerTitle: 'Details',
               headerStyle: { backgroundColor: '#C2F1FF',},
               headerLeft: () => (

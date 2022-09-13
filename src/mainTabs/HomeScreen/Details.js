@@ -18,6 +18,7 @@ import CalendarPicker from 'react-native-calendar-picker';
 import RazorpayCheckout from 'react-native-razorpay';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
+import StackHeader from '../../../components/StackHeader'
 
 const {width: viewportWidth, height: viewportHeight} = Dimensions.get('window');
 const carouselItem = [
@@ -205,6 +206,17 @@ const BookNow = ({navigation, route}) => {
         messageFontSize={24}
         message="Loading... 😀😀😀"
         /> */}
+          <StackHeader
+       headerName="Details"
+       name="arrow-left"
+       size={24}
+       color="black"
+       headerNavigation={() => navigation.goBack()}
+      //  filterName="filter"
+      //  filterSize={28}
+      //  filterColor="black"
+      //  filterNavigation={() => filter()}
+     />
         <LinearGradient colors={['#C2F1FF', '#F5F5F5']}>
           {/* {res && res?.map(item => {
               console.log('object', res);
@@ -476,7 +488,7 @@ const BookNow = ({navigation, route}) => {
                     // height: 40
                   }}>
                   <TextInput
-                  placeholder='How Many Person?'
+                  placeholder='Travel With Train, Bus, etc'
                     style={styles.input}
                     keyboardType='default'
                     onChangeText={onChangeText}

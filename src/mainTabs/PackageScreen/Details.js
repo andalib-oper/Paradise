@@ -15,6 +15,7 @@ import {
   import AntDesign from 'react-native-vector-icons/AntDesign';
   import CalendarPicker from 'react-native-calendar-picker';
   import RazorpayCheckout from 'react-native-razorpay';
+  import StackHeader from '../../../components/StackHeader'
   import moment from 'moment';
   import React from 'react';
   import {useState} from 'react';
@@ -176,6 +177,17 @@ import {
     return (
       <View>
         <ScrollView>
+        <StackHeader
+       headerName="Details"
+       name="arrow-left"
+       size={24}
+       color="black"
+       headerNavigation={() => navigation.goBack()}
+      //  filterName="filter"
+      //  filterSize={28}
+      //  filterColor="black"
+      //  filterNavigation={() => filter()}
+     />
           <LinearGradient colors={['#C2F1FF', '#F5F5F5']}>
             <View style={styles.map}>
               <Carousel

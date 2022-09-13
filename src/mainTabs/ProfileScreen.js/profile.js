@@ -11,6 +11,7 @@ import {useDispatch} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import AddProductsTextInput from '../../../components/AddProductsTextInput';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import { logUserOut } from '../../../redux/auth/action';
 
 const data = [
   {
@@ -79,7 +80,7 @@ const Profile = ({navigation}) => {
           {data.map(item => {
             return (
               <View>
-                <View style={{marginTop: '10%',height: windowHeight/10}}>
+                <View style={{marginTop: '10%', height: windowHeight / 10}}>
                   <Text style={styles.header}>First Name</Text>
                   <View
                     style={{
@@ -100,7 +101,7 @@ const Profile = ({navigation}) => {
                     </Text>
                   </View>
                 </View>
-                <View style={{marginTop: '2%',height: windowHeight/10}}>
+                <View style={{marginTop: '2%', height: windowHeight / 10}}>
                   <Text style={styles.header}>Last Name</Text>
                   <View
                     style={{
@@ -121,7 +122,7 @@ const Profile = ({navigation}) => {
                     </Text>
                   </View>
                 </View>
-                <View style={{marginTop: '5%', height: windowHeight/10}}>
+                <View style={{marginTop: '5%', height: windowHeight / 10}}>
                   <Text style={styles.header}>Address</Text>
                   <View
                     style={{
@@ -142,7 +143,7 @@ const Profile = ({navigation}) => {
                     </Text>
                   </View>
                 </View>
-                <View style={{marginTop: '2%',height: windowHeight/10}}>
+                <View style={{marginTop: '2%', height: windowHeight / 10}}>
                   <Text style={styles.header}>Email</Text>
                   <View
                     style={{
@@ -163,7 +164,7 @@ const Profile = ({navigation}) => {
                     </Text>
                   </View>
                 </View>
-                <View style={{marginTop: '2%',height: windowHeight/10}}>
+                <View style={{marginTop: '2%', height: windowHeight / 10}}>
                   <Text style={styles.header}>Phone Number</Text>
                   <View
                     style={{
@@ -187,12 +188,32 @@ const Profile = ({navigation}) => {
               </View>
             );
           })}
-            <TouchableOpacity
-          style={styles.button}
-          // onPress={() => onSubmitHandler()}>
-          onPress={()=>navigation.navigate("editprofile")}>
-          <Text style={styles.buttonText}>Edit</Text>
-        </TouchableOpacity>
+          <View
+            style={{
+              flexDirection: 'row',
+            }}>
+            <View style={{
+              // backgroundColor: 'pink',
+              width: '50%'
+            }}>
+              <TouchableOpacity
+                style={styles.button}
+                // onPress={() => onSubmitHandler()}>
+                onPress={() => navigation.navigate('editprofile')}>
+                <Text style={styles.buttonText}>Edit</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{
+              // backgroundColor: 'pink',
+              width: '50%'
+            }}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => dispatch(logUserOut())}>
+                <Text style={styles.buttonText}>Logout</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
           {/* <AddProductsTextInput
             multiline
             numberOfLines={4}
@@ -230,16 +251,16 @@ const styles = StyleSheet.create({
   button: {
     marginTop: '15%',
     marginBottom: '10%',
-    width: '30%',
-    padding: 10,
+    width: '40%',
+    padding: 5,
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
     backgroundColor: '#63B2FB',
-    borderRadius: 10,
+    borderRadius: 5,
   },
   buttonText: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '600',
     color: 'white',
   },

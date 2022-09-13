@@ -21,7 +21,7 @@ const BookingsNavigator = ({navigation, route}) => {
         <Stack.Navigator initialRouteName='bookings'>
             <Stack.Screen name='booking' component={Bookings} 
             options={{
-                headerShown: true,
+                headerShown: false,
                 headerStyle: { backgroundColor: '#C2F1FF',},
                 headerTitle: 'Bookings',
                 headerLeft: () => (

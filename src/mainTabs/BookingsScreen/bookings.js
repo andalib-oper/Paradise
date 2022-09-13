@@ -2,7 +2,7 @@ import { ScrollView, StyleSheet, Text, View, Dimensions, Image } from 'react-nat
 import React from 'react'
 import LinearGradient from 'react-native-linear-gradient';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
+import StackHeader from '../../../components/StackHeader';
 
 const data = [
   {
@@ -30,10 +30,21 @@ const data = [
     pack: '4000'
   }
 ]
-const Bookings = () => {
+const Bookings = ({navigation}) => {
   return (
     <View>
       <ScrollView>
+      <StackHeader
+       headerName="Bookings"
+       name="arrow-left"
+       size={24}
+       color="black"
+       headerNavigation={() => navigation.goBack()}
+      //  filterName="filter"
+      //  filterSize={28}
+      //  filterColor="black"
+      //  filterNavigation={() => filter()}
+     />
         <LinearGradient colors={['#C2F1FF', '#F5F5F5']}>
           {data.map((item)=>{
             return(
