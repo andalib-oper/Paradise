@@ -17,8 +17,9 @@ import {
   import RazorpayCheckout from 'react-native-razorpay';
   import StackHeader from '../../../components/StackHeader'
   import moment from 'moment';
+  import axios from 'axios';
   import React from 'react';
-  import {useState} from 'react';
+  import {useState, useEffect} from 'react';
   
   const {width: viewportWidth, height: viewportHeight} = Dimensions.get('window');
   const carouselItem = [
@@ -53,7 +54,9 @@ import {
         'https://media.istockphoto.com/photos/beautiful-view-of-dal-lake-in-winter-srinagar-kashmir-india-picture-id1323846766?b=1&k=20&m=1323846766&s=170667a&w=0&h=ax37KHHN6VL7ESLPhlDkva26WZdDu8DFSHLIuEDTNY8=',
     },
   ];
-  const BookNow = ({navigation}) => {
+  const BookNow = ({navigation, route}) => {
+    const {packageId} = route.params
+    const [res, setRes] = useState()
     const [starCount, setStarCount] = useState();
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedStartDate, setSelectedStartDate] = useState(
@@ -167,16 +170,19 @@ import {
       setStarCount({startCount: rating});
     };
   
-    const [payment, setPayment] = useState({
-     product: {
-        title: "Kashmir",
-        description: "this is kashmir",
-        amount : "500"
-      },
-    })
+    const [payment, setPayment] = useState()
+    const url = `https://paradis-be-iam.herokuapp.com/api`;
+    useEffect(() => {
+      axios.get(`${url}/package/${packageId}`)
+      .then((response) => {
+        setRes(response.data);
+      });
+    }, []);
+    console.log('197', res);
     return (
       <View>
         <ScrollView>
+          {/* <Text>{packageId}</Text> */}
         <StackHeader
        headerName="Details"
        name="arrow-left"
@@ -218,7 +224,7 @@ import {
                   marginTop: '5%',
                   marginLeft: '10%',
                 }}>
-                Kashmir
+                {res?.state}
               </Text>
             </View>
             <View>
@@ -231,7 +237,7 @@ import {
                   marginTop: '1%',
                   marginLeft: '10%',
                 }}>
-                Famous for Holiday
+                {res?.inclusion}
               </Text>
             </View>
             <View
@@ -278,7 +284,7 @@ import {
                   marginTop: '1%',
                   marginLeft: '10%',
                 }}>
-                MRP Rs 4000
+                MRP Rs {res?.price}
               </Text>
             </View>
             <View>
@@ -302,7 +308,8 @@ import {
                   height: windowHeight / 5,
                 }}
                 source={{
-                  uri: 'https://media.istockphoto.com/photos/beautiful-view-of-dal-lake-in-winter-srinagar-kashmir-india-picture-id1323846766?b=1&k=20&m=1323846766&s=170667a&w=0&h=ax37KHHN6VL7ESLPhlDkva26WZdDu8DFSHLIuEDTNY8=',
+                 uri: (res?.packageImage[0])
+                  // uri: 'https://media.istockphoto.com/photos/beautiful-view-of-dal-lake-in-winter-srinagar-kashmir-india-picture-id1323846766?b=1&k=20&m=1323846766&s=170667a&w=0&h=ax37KHHN6VL7ESLPhlDkva26WZdDu8DFSHLIuEDTNY8=',
                 }}
               />
               <Text
@@ -321,13 +328,10 @@ import {
                     fontSize: 16,
                     fontWeight: '500',
                   }}>
-                  Srinagar{'\n'}
+                  {res?.city}{'\n'}
                 </Text>
                 {'\n'}
-                Irure laboris nulla nostrud dolor reprehenderit amet. Pariatur ad
-                quis proident fugiat deserunt quis laboris. Veniam nostrud eiusmod
-                incididunt ipsum enim eiusmod fugiat in Lorem. Voluptate velit est
-                excepteur amet qui adipisicing fugiat.
+                {res?.overview}
               </Text>
             </View>
             <View>
@@ -335,12 +339,12 @@ import {
                 onPress={() => {
                   // const amount = '2000'
                   var options = {
-                    name: payment?.product?.title,
-                    description: payment?.product?.description,
+                    name: res?.state,
+                    description: res?.overview,
                     image: 'https://i.imgur.com/3g7nmJC.png',
                     currency: 'INR',
                     key: 'rzp_test_wJHRrVvmMKlou7', // Your api key
-                    amount: payment?.product?.amount,
+                    amount: res?.price,
                     theme: {color: '#C2F1FF'},
                   };
                   RazorpayCheckout.open(options)

@@ -7,8 +7,10 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import React from 'react';
+import axios from 'axios';
 import LinearGradient from 'react-native-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
+import { useState, useEffect } from 'react';
 
 const place = [
   {
@@ -42,13 +44,22 @@ const place = [
 ];
 
 const ProductButton = () => {
+  const [res, setRes] = useState("")
   const navigation = useNavigation();
+  const url = `https://paradis-be-iam.herokuapp.com/api`;
+  useEffect(() => {
+    axios.get(`${url}/package`)
+    .then((response) => {
+      setRes(response.data);
+    });
+  }, []);
+  console.log('product button', res);
   return (
     <View style={styles.container}>
       <LinearGradient
         colors={['#C2F1FF', '#F5F5F5']}
         style={styles.linearGradient}>
-        {place.map(item => {
+        {res && res?.map(item => {
           return (
             <View>
               <View style={styles.recomView}>
@@ -61,7 +72,7 @@ const ProductButton = () => {
                     marginTop: '5%',
                     marginLeft: '8%',
                   }}>
-                  {item.name}
+                  {item.state}
                 </Text>
                 <Text
                   style={{
@@ -70,7 +81,7 @@ const ProductButton = () => {
                     marginTop: '2%',
                     marginLeft: '8%',
                   }}>
-                  {item.tripDays}
+                  {item.duration}
                   {'\b'}Days Trips
                 </Text>
                 <Image
@@ -82,7 +93,7 @@ const ProductButton = () => {
                     height: windowHeight / 5,
                   }}
                   source={{
-                    uri: item.image,
+                    uri: (item.packageImage[0])? (item.packageImage[0]): "https://i.imgur.com/MABUbpDl.jpg"
                   }}
                 />
                 <View
@@ -112,13 +123,13 @@ const ProductButton = () => {
                           marginTop: '2%',
                           marginLeft: '8%',
                         }}>
-                        {item.offer} off
+                        {item.inclusion} 
                       </Text>
                     </Text>
                   </View>
                   <View style={{marginLeft: '20%'}}>
                     <TouchableOpacity
-                      onPress={() => navigation.navigate('details')}
+                      onPress={() => navigation.navigate('details', {packageId: item._id})}
                       style={styles.bookNow}>
                       <Text style={{color: '#fff'}}>View Details</Text>
                     </TouchableOpacity>

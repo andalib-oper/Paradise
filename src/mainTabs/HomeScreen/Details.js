@@ -14,6 +14,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Carousel, {getInputRangeFromIndexes} from 'react-native-snap-carousel';
 import {Rating, AirbnbRating} from 'react-native-ratings';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import axios from 'axios';
 import CalendarPicker from 'react-native-calendar-picker';
 import RazorpayCheckout from 'react-native-razorpay';
 import moment from 'moment';
@@ -179,20 +180,12 @@ const BookNow = ({navigation, route}) => {
     },
   });
 
+  const url = `https://paradis-be-iam.herokuapp.com/api`;
   useEffect(() => {
-    const url = `https://paradis-be-iam.herokuapp.com/api/package/${packageId}`;
-
-    const fetchData = async () => {
-      try {
-        const response = await fetch(url);
-        const json = await response.json();
-        console.log(json);
-        setRes(json);
-      } catch (error) {
-        console.log('error', error);
-      }
-    };
-    fetchData();
+    axios.get(`${url}/package/${packageId}`)
+    .then((response) => {
+      setRes(response.data);
+    });
   }, []);
   console.log('197', res);
   return (
@@ -204,7 +197,7 @@ const BookNow = ({navigation, route}) => {
         color="white"
         indicatorSize="large"
         messageFontSize={24}
-        message="Loading... 😀😀😀"
+        message="Loading... "
         /> */}
           <StackHeader
        headerName="Details"
@@ -355,7 +348,7 @@ const BookNow = ({navigation, route}) => {
                           fontSize: 16,
                           fontWeight: '500',
                         }}>
-                        Srinagar{'\n'}
+                        {res?.city}{'\n'}
                       </Text>
                       {'\n'}
                       {res?.overview}

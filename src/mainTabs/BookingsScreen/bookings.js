@@ -3,6 +3,10 @@ import React from 'react'
 import LinearGradient from 'react-native-linear-gradient';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import StackHeader from '../../../components/StackHeader';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import moment from 'moment';
+import { useSelector } from 'react-redux';
 
 const data = [
   {
@@ -31,6 +35,21 @@ const data = [
   }
 ]
 const Bookings = ({navigation}) => {
+  const [res, setRes] = useState("")
+  const authState = useSelector((state)=>state.authState)
+  const url = `https://paradis-be-iam.herokuapp.com/api`;
+  useEffect(() => {
+    axios.get(`${url}/booking/user/${authState.id}`)
+    .then((response) => {
+      setRes(response.data);
+    });
+  }, []);
+  console.log('booking', res, authState.id);
+  const formatDate = (date) => {
+    const arr = date.split("-")
+    const formatStr = `${arr[2]}-${arr[1]}-${arr[0]}`
+    return formatStr
+  }
   return (
     <View>
       <ScrollView>
@@ -46,22 +65,23 @@ const Bookings = ({navigation}) => {
       //  filterNavigation={() => filter()}
      />
         <LinearGradient colors={['#C2F1FF', '#F5F5F5']}>
-          {data.map((item)=>{
+          {res && res?.map((item)=>{
             return(
           <View style={styles.card}>
             <View style={styles.cardInner}>
               <Image
                 style={styles.tinyLogo}
-                source={{uri: (item.img)}}
+                // source={{uri: (item.)}}
                 // source={require('../../../images/logo.png')}
               />
               <View style={{
                 // backgroundColor: 'orange',
                 width: '55%'
                 }}>
-                <Text style={styles.innerText}>{item.title}</Text>
-                <Text style={styles.package}>{item.des}</Text>
-                <Text style={styles.package}>{item.pack}</Text>
+                <Text style={styles.innerText}>{item.transportaionName}</Text>
+                <Text style={styles.package}>{item.transportaionAddress}</Text>
+                {/* <Text style={styles.package}>{formatDate(item.tourStartDate)}</Text> */}
+                <Text style={styles.package}>{moment(item.tourStartDate).format('DD-MM-YYYY')}{'\b'}to{moment(item.tourEndDate).format('DD-MM-YYYY')}</Text>
                 <TouchableOpacity style={styles.button}>
                   <Text style={styles.buttonText}>Cancel</Text>
                 </TouchableOpacity>
@@ -128,7 +148,7 @@ const styles = StyleSheet.create({
   button: {
     alignSelf: 'flex-end',
     alignItems: 'center',
-    marginTop: '5%',
+    marginTop: '15%',
     width: '40%',
     padding: 5,
     backgroundColor: '#63B2FB',

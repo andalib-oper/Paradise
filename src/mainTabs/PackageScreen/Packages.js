@@ -5,17 +5,26 @@ import Feather from 'react-native-vector-icons/Feather';
 import {useNavigation} from '@react-navigation/native';
 import SelectDropdown from 'react-native-select-dropdown';
 import SearchBar from 'react-native-dynamic-search-bar';
+import axios from 'axios';
 import ProductButton from '../../../components/productButton';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const Packages = () => {
   const navigation = useNavigation()
+  const [res,setRes] = useState()
   const [filterVisible, setFilterVisible] = useState(false);
   const filter = () => {
     // console.log("here 2")
     setFilterVisible(!filterVisible);
   };
-
+  // const url = `https://paradis-be-iam.herokuapp.com/api`;
+  // useEffect(() => {
+  //   axios.get(`${url}/package`)
+  //   .then((response) => {
+  //     setRes(response.data);
+  //   });
+  // }, []);
+  // console.log('197', res);
   const countries = ["Egypt", "Canada", "Australia", "Ireland"]
   const price = ["Egypt", "Canada", "Australia", "Ireland"]
   return (

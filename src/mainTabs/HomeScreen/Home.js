@@ -15,6 +15,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { useState } from 'react';
+import axios from 'axios';
 import StackHeader from '../../../components/StackHeader'
 
 const horizontalMargin = 10;
@@ -86,21 +87,29 @@ const Home = ({navigation}) => {
       </View>
     );
   };
-  useEffect(() => {
-    const url = "https://paradis-be-iam.herokuapp.com/api/package";
+  // useEffect(() => {
+  //   const url = "https://paradis-be-iam.herokuapp.com/api/package";
 
-    const fetchData = async () => {
-      try {
-        const response = await fetch(url);
-        const json = await response.json();
-        // console.log(json);
-        setRes(json);
-      } catch (error) {
-        console.log("error", error);
-      }
-    };
-    fetchData();
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch(url);
+  //       const json = await response.json();
+  //       // console.log(json);
+  //       setRes(json);
+  //     } catch (error) {
+  //       console.log("error", error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
+  const url = `https://paradis-be-iam.herokuapp.com/api`;
+  useEffect(() => {
+    axios.get(`${url}/package`)
+    .then((response) => {
+      setRes(response.data);
+    });
   }, []);
+  console.log('197', res);
   // console.log("object", res)
   return (
     <View style={styles.container}>
