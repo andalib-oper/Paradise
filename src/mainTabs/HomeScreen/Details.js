@@ -188,6 +188,16 @@ const BookNow = ({navigation, route}) => {
     });
   }, []);
   console.log('197', res);
+  // function createPost() {
+  //   axios
+  //     .post(baseURL, {
+  //       title: "Hello World!",
+  //       body: "This is a new post."
+  //     })
+  //     .then((response) => {
+  //       setPost(response.data);
+  //     });
+  // }
   return (
     <View>
       {/* <Text>id: {packageId}</Text> */}
