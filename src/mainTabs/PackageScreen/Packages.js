@@ -162,7 +162,7 @@ const windowHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#C2F1FF',
+    backgroundColor: '#fff',
   },
   animation: {
     width: windowWidth / 4,
@@ -268,6 +268,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     // marginTop: '5%',
     // flexDirection: 'row',
-    backgroundColor: '#C2F1FF',
+    // backgroundColor: '#C2F1FF',
+    backgroundColor: '#fff'
   },
 });

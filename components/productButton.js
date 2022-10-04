@@ -56,9 +56,9 @@ const ProductButton = () => {
   console.log('product button', res);
   return (
     <View style={styles.container}>
-      <LinearGradient
+      {/* <LinearGradient
         colors={['#C2F1FF', '#F5F5F5']}
-        style={styles.linearGradient}>
+        style={styles.linearGradient}> */}
         {res && res?.map(item => {
           return (
             <View>
@@ -140,7 +140,7 @@ const ProductButton = () => {
           );
         })}
         <View style={{marginBottom: '10%'}}></View>
-      </LinearGradient>
+      {/* </LinearGradient> */}
     </View>
   );
 };

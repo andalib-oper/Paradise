@@ -124,9 +124,9 @@ const Home = ({navigation}) => {
        headerName="Home"
      />
       <ScrollView>
-        <LinearGradient
+        {/* <LinearGradient
           colors={['#C2F1FF', '#F5F5F5']}
-          style={styles.linearGradient}>
+          style={styles.linearGradient}> */}
           <View>
             <SearchBar
               style={styles.searchbar}
@@ -229,7 +229,7 @@ const Home = ({navigation}) => {
               </View>
             );
           })}
-        </LinearGradient>
+        {/* </LinearGradient> */}
       </ScrollView>
     </View>
   );
@@ -274,6 +274,7 @@ const styles = StyleSheet.create({
     marginBottom: '5%',
     backgroundColor: '#fff',
     borderRadius: 10,
+    elevation: 10,
     alignSelf: 'center',
     width: windowWidth / 1.2,
     height: 'auto',

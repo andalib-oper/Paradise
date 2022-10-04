@@ -17,9 +17,12 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import axios from 'axios';
 import CalendarPicker from 'react-native-calendar-picker';
 import RazorpayCheckout from 'react-native-razorpay';
+import Stars from 'react-native-stars';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
-import StackHeader from '../../../components/StackHeader'
+import StackHeader from '../../../components/StackHeader';
+import {useSelector} from 'react-redux';
 
 const {width: viewportWidth, height: viewportHeight} = Dimensions.get('window');
 const carouselItem = [
@@ -57,9 +60,11 @@ const carouselItem = [
 const BookNow = ({navigation, route}) => {
   const {packageId} = route.params;
   const [text, onChangeText] = useState();
+  const authState = useSelector(state => state.authState);
   const [number, onChangeNumber] = useState();
   const [starCount, setStarCount] = useState();
-  const [res, setRes] = useState("");
+  const [res, setRes] = useState('');
+  const [hotels, setHotels] = useState();
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedStartDate, setSelectedStartDate] = useState(
     moment().format('YYYY-MM-DD'),
@@ -82,7 +87,7 @@ const BookNow = ({navigation, route}) => {
   const onSubmit = () => {
     modelClose();
   };
-  console.log('persond day', text, number);
+  console.log('persond day', text, number, authState.accessToken);
   console.log('selected date', selectedStartDate, selectedEndDate);
   const WATER_IMAGE = require('../../../images/star.png');
 
@@ -182,24 +187,51 @@ const BookNow = ({navigation, route}) => {
 
   const url = `https://paradis-be-iam.herokuapp.com/api`;
   useEffect(() => {
-    axios.get(`${url}/package/${packageId}`)
-    .then((response) => {
+    axios.get(`${url}/package/${packageId}`).then(response => {
       setRes(response.data);
     });
   }, []);
-  console.log('197', res);
-  // function createPost() {
-  //   axios
-  //     .post(baseURL, {
-  //       title: "Hello World!",
-  //       body: "This is a new post."
-  //     })
-  //     .then((response) => {
-  //       setPost(response.data);
-  //     });
-  // }
+
+  const hotel = `http://fake-hotel-api.herokuapp.com/api/hotels?no_error=1`;
+  useEffect(() => {
+    axios.get(`${hotel}`).then(response => {
+      setHotels(response.data);
+    });
+  }, []);
+  // console.log('197', hotels[0].city);
+  const BookNow = (id,accessToken) => {
+    try {
+      const response = axios
+      .post(
+      `https://paradis-be-iam.herokuapp.com/api/booking`,
+        {
+          packageId: packageId,
+          hotelId: id,
+          transportaionName: text,
+          transportaionAddress: '2/2 gopal road',
+          tourStartDate: selectedStartDate,
+          tourEndDate: selectedEndDate,
+        },
+        {
+          headers: { Authorization: "Bearer "+ authState.accessToken },
+        }
+      )
+      if (response.data === 200) {
+        console.log("200", response.data)
+      } 
+    } catch (error) {
+      console.log("error", error)
+    }
+    // console.log("object", authState.accessToken)
+      // console.log("token", Headers)
+      // .then(response => {
+      //   // setPost(response.data);
+      //   console.log("post", response.data)
+      // });
+    // console.log("hotel id",id)
+  };
   return (
-    <View>
+    <View style={styles.container}>
       {/* <Text>id: {packageId}</Text> */}
       <ScrollView>
         {/* <OrientationLoadingOverlay
@@ -209,76 +241,76 @@ const BookNow = ({navigation, route}) => {
         messageFontSize={24}
         message="Loading... "
         /> */}
-          <StackHeader
-       headerName="Details"
-       name="arrow-left"
-       size={24}
-       color="black"
-       headerNavigation={() => navigation.goBack()}
-      //  filterName="filter"
-      //  filterSize={28}
-      //  filterColor="black"
-      //  filterNavigation={() => filter()}
-     />
-        <LinearGradient colors={['#C2F1FF', '#F5F5F5']}>
-          {/* {res && res?.map(item => {
+        <StackHeader
+          headerName="Details"
+          name="arrow-left"
+          size={24}
+          color="black"
+          headerNavigation={() => navigation.goBack()}
+          //  filterName="filter"
+          //  filterSize={28}
+          //  filterColor="black"
+          //  filterNavigation={() => filter()}
+        />
+        {/* <LinearGradient colors={['#C2F1FF', '#F5F5F5']}> */}
+        {/* {res && res?.map(item => {
               console.log('object', res);
               return ( */}
-                <View>
-                  <View style={styles.map}>
-                    <Carousel
-                      // other props
-                      data={carouselItem}
-                      renderItem={renderItem}
-                      layout={'tinder'}
-                      loop={true}
-                      loopClonesPerSide={2}
-                      autoplay={true}
-                      // sliderHeight={windowHeight/2}
-                      autoplayDelay={500}
-                      autoplayInterval={3000}
-                      sliderWidth={sliderWidth}
-                      itemWidth={itemWidth}
-                      scrollInterpolator={scrollInterpolator}
-                      slideInterpolatedStyle={animatedStyles}
-                      useScrollView={true}
-                    />
-                  </View>
-                  <View>
-                    <Text
-                      style={{
-                        textAlign: 'left',
-                        color: '#000',
-                        fontSize: 20,
-                        fontWeight: '600',
-                        marginTop: '5%',
-                        marginLeft: '10%',
-                      }}>
-                      {res?.state}
-                    </Text>
-                  </View>
-                  <View>
-                    {/* <Text>id:{packageId}</Text> */}
-                    <Text
-                      style={{
-                        textAlign: 'left',
-                        color: 'grey',
-                        fontSize: 14,
-                        fontWeight: '400',
-                        marginTop: '1%',
-                        marginLeft: '10%',
-                      }}>
-                      {res?.inclusion}
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      marginLeft: '10%',
-                      // backgroundColor: 'pink'
-                    }}>
-                    <View>
-                      <Rating
+        <View>
+          <View style={styles.map}>
+            <Carousel
+              // other props
+              data={carouselItem}
+              renderItem={renderItem}
+              layout={'tinder'}
+              loop={true}
+              loopClonesPerSide={2}
+              autoplay={true}
+              // sliderHeight={windowHeight/2}
+              autoplayDelay={500}
+              autoplayInterval={3000}
+              sliderWidth={sliderWidth}
+              itemWidth={itemWidth}
+              scrollInterpolator={scrollInterpolator}
+              slideInterpolatedStyle={animatedStyles}
+              useScrollView={true}
+            />
+          </View>
+          <View>
+            <Text
+              style={{
+                textAlign: 'left',
+                color: '#000',
+                fontSize: 20,
+                fontWeight: '600',
+                marginTop: '5%',
+                marginLeft: '10%',
+              }}>
+              {res?.state}
+            </Text>
+          </View>
+          <View>
+            {/* <Text>id:{packageId}</Text> */}
+            <Text
+              style={{
+                textAlign: 'left',
+                color: 'grey',
+                fontSize: 14,
+                fontWeight: '400',
+                marginTop: '1%',
+                marginLeft: '10%',
+              }}>
+              {res?.inclusion}
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              marginLeft: '10%',
+              // backgroundColor: 'pink'
+            }}>
+            <View>
+              {/* <Rating
                         type="custom"
                         ratingImage={WATER_IMAGE}
                         // ratingColor="#3498db"
@@ -289,211 +321,319 @@ const BookNow = ({navigation, route}) => {
                         imageSize={20}
                         onFinishRating={ratingCompleted}
                         style={{marginTop: '2%'}}
-                      />
-                    </View>
-                    <View
-                      style={{
-                        // backgroundColor: 'pink',
-                        width: '25%',
-                        marginLeft: '50%',
-                        // marginTop: 5,
-                      }}>
-                      <Pressable
-                        style={[styles.button1]}
-                        onPress={() => setModalVisible(true)}>
-                        <AntDesign name="calendar" size={20} color="black" />
-                      </Pressable>
-                    </View>
-                  </View>
-                  <View>
-                    <Text
-                      style={{
-                        textAlign: 'left',
-                        color: 'grey',
-                        fontSize: 14,
-                        fontWeight: '400',
-                        marginTop: '1%',
-                        marginLeft: '10%',
-                      }}>
-                      MRP Rs {res?.price}
-                    </Text>
-                  </View>
-                  <View>
-                    <Text
-                      style={{
-                        textAlign: 'left',
-                        color: '#000',
-                        fontSize: 20,
-                        fontWeight: '600',
-                        marginTop: '5%',
-                        marginLeft: '10%',
-                      }}>
-                      Places To Visit
-                    </Text>
-                    <Image
-                      style={{
-                        margin: '5%',
-                        borderRadius: 10,
-                        width: windowWidth / 1.4,
-                        alignSelf: 'center',
-                        height: windowHeight / 5,
-                      }}
-                      source={{
-                        uri: 'https://media.istockphoto.com/photos/beautiful-view-of-dal-lake-in-winter-srinagar-kashmir-india-picture-id1323846766?b=1&k=20&m=1323846766&s=170667a&w=0&h=ax37KHHN6VL7ESLPhlDkva26WZdDu8DFSHLIuEDTNY8=',
-                      }}
-                    />
-                    <Text
-                      style={{
-                        textAlign: 'left',
-                        color: 'grey',
-                        fontSize: 14,
-                        fontWeight: '400',
-                        marginTop: '1%',
-                        marginLeft: '10%',
-                        marginBottom: '2%',
-                      }}>
-                      <Text
-                        style={{
-                          color: 'black',
-                          fontSize: 16,
-                          fontWeight: '500',
-                        }}>
-                        {res?.city}{'\n'}
-                      </Text>
-                      {'\n'}
-                      {res?.overview}
-                    </Text>
-                  </View>
-                  <View>
-                    <TouchableOpacity
-                      onPress={() => {
-                        // const amount = '2000'
-                        var options = {
-                          name: res?.state,
-                          description: res?.overview,
-                          image: 'https://i.imgur.com/3g7nmJC.png',
-                          currency: 'INR',
-                          key: 'rzp_test_wJHRrVvmMKlou7', // Your api key
-                          amount: res?.price,
-                          theme: {color: '#C2F1FF'},
-                        };
-                        RazorpayCheckout.open(options)
-                          .then(data => {
-                            // handle success
-                            alert(`Success: ${data.razorpay_payment_id}`);
-                          })
-                          .catch(error => {
-                            // handle failure
-                            alert(
-                              `Error: ${error.code} | ${error.description}`,
-                            );
-                          });
-                      }}
-                      style={styles.bookNow}>
-                      <Text
-                        style={{
-                          fontSize: 16,
-                          fontWeight: '500',
-                          textAlign: 'center',
-                          marginTop: '3%',
-                          color: '#fff',
-                        }}>
-                        Book Now
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              {/* );
-            })} */}
-          <View>
-            <Modal
-              animationType="slide"
-              transparent={true}
-              visible={modalVisible}
-              onRequestClose={() => {
-                Alert.alert('Modal has been closed.');
-                setModalVisible(!modalVisible);
-              }}>
-              <View style={styles.centeredView}>
-                <View style={styles.modalView}>
-                  <CalendarPicker
-                    startFromMonday={true}
-                    allowRangeSelection={true}
-                    minDate={new Date(2010, 1, 1)}
-                    maxDate={new Date(2050, 12, 31)}
-                    width={windowWidth / 1.3}
-                    weekdays={[
-                      'Mon',
-                      'Tue',
-                      'Wed',
-                      'Thur',
-                      'Fri',
-                      'Sat',
-                      'Sun',
-                    ]}
-                    months={[
-                      'January',
-                      'Febraury',
-                      'March',
-                      'April',
-                      'May',
-                      'June',
-                      'July',
-                      'August',
-                      'September',
-                      'October',
-                      'November',
-                      'December',
-                    ]}
-                    previousTitleStyle={{
-                      color: 'blue',
-                      fontSize: 24,
-                    }}
-                    previousTitle="<"
-                    nextTitleStyle={{
-                      color: 'blue',
-                      fontSize: 24,
-                    }}
-                    nextTitle=">"
-                    todayBackgroundColor="#63B2FB"
-                    selectedDayColor="#63B2FB"
-                    selectedDayTextColor="#fff"
-                    scaleFactor={375}
-                    textStyle={{
-                      fontFamily: 'Cochin',
-                      color: '#000000',
-                      fontSize: 14,
-                    }}
-                    monthTitleStyle={{
-                      // backgroundColor: 'pink',
-                      fontWeight: '700',
-                      fontSize: 18,
-                    }}
-                    yearTitleStyle={{
-                      // backgroundColor: 'grey',
-                      fontWeight: '700',
-                      fontSize: 18,
-                    }}
-                    headerWrapperStyle={{
-                      marginBottom: 20,
-                      // paddingVertical: 20,
-                    }}
-                    onDateChange={onDateChange}
-                    dayLabelsWrapper={{
-                      backgroundColor: '#63B2FB',
-                      borderRadius: 10,
-                      borderColor: 0,
-                    }}
+                      /> */}
+              <Stars
+                display={3.67}
+                spacing={5}
+                count={5}
+                starSize={20}
+                fullStar={
+                  <Icon name="star" size={20} style={[styles.myStarStyle]} />
+                }
+                emptyStar={
+                  <Icon
+                    name="star-outline"
+                    size={20}
+                    style={[styles.myStarStyle, styles.myEmptyStarStyle]}
                   />
-                  <View style={{
+                }
+                halfStar={
+                  <Icon
+                    name="star-half"
+                    size={20}
+                    style={[styles.myStarStyle]}
+                  />
+                }
+              />
+            </View>
+            <View
+              style={{
+                // backgroundColor: 'pink',
+                width: '25%',
+                marginLeft: '40%',
+                // marginTop: 5,
+              }}>
+              <Pressable
+                style={[styles.button1]}
+                onPress={() => setModalVisible(true)}>
+                <AntDesign name="calendar" size={20} color="black" />
+              </Pressable>
+            </View>
+          </View>
+          <View>
+            <Text
+              style={{
+                textAlign: 'left',
+                color: 'grey',
+                fontSize: 14,
+                fontWeight: '400',
+                marginTop: '1%',
+                marginLeft: '10%',
+              }}>
+              MRP Rs {res?.price}
+            </Text>
+          </View>
+          <View>
+            <Text
+              style={{
+                textAlign: 'left',
+                color: '#000',
+                fontSize: 20,
+                fontWeight: '600',
+                marginTop: '5%',
+                marginLeft: '10%',
+              }}>
+              Places To Visit
+            </Text>
+            <Image
+              style={{
+                margin: '5%',
+                borderRadius: 10,
+                width: windowWidth / 1.4,
+                alignSelf: 'center',
+                height: windowHeight / 5,
+              }}
+              source={{
+                uri: 'https://media.istockphoto.com/photos/beautiful-view-of-dal-lake-in-winter-srinagar-kashmir-india-picture-id1323846766?b=1&k=20&m=1323846766&s=170667a&w=0&h=ax37KHHN6VL7ESLPhlDkva26WZdDu8DFSHLIuEDTNY8=',
+              }}
+            />
+            <Text
+              style={{
+                textAlign: 'left',
+                color: 'grey',
+                fontSize: 14,
+                fontWeight: '400',
+                marginTop: '1%',
+                marginLeft: '10%',
+                marginBottom: '2%',
+              }}>
+              <Text
+                style={{
+                  color: 'black',
+                  fontSize: 16,
+                  fontWeight: '500',
+                }}>
+                {res?.city}
+                {'\n'}
+              </Text>
+              {'\n'}
+              {res?.overview}
+            </Text>
+          </View>
+          <View>
+            <Text
+              style={{
+                textAlign: 'left',
+                color: '#000',
+                fontSize: 20,
+                fontWeight: '600',
+                marginTop: '5%',
+                marginLeft: '10%',
+              }}>
+              Hotels Near By
+            </Text>
+          </View>
+          {hotels?.map(item => {
+            // console.log('object', item.id);
+            return (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginTop: '5%',
+                  marginLeft: '5%',
+                  marginRight: '5%',
+                  elevation: 10,
+                  borderRadius: 10,
+                  backgroundColor: '#fff',
+                }}>
+                <View style={{width: '70%'}}>
+                  <Text
+                    style={{
+                      textAlign: 'left',
+                      color: 'grey',
+                      fontSize: 14,
+                      fontWeight: '400',
+                      marginTop: '4%',
+                      marginLeft: '10%',
+                      marginBottom: '4%',
+                    }}>
+                    <Text
+                      style={{
+                        color: 'black',
+                        fontSize: 16,
+                        fontWeight: '500',
+                      }}>
+                      {item?.name}
+                      {/* frieds */}
+                      {'\n'}
+                    </Text>
+                    {'\n'}
+                    {/* hello */}
+                    {item?.city}
+                  </Text>
+                </View>
+                <View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      // BookNow(item.id);
+                      console.log("onbook now")
+                      // const amount = '2000'
+                      //   var options = {
+                      //     name: res?.state,
+                      //     description: res?.overview,
+                      //     image: 'https://i.imgur.com/3g7nmJC.png',
+                      //     currency: 'INR',
+                      //     key: 'rzp_test_wJHRrVvmMKlou7', // Your api key
+                      //     amount: res?.price,
+                      //     theme: {color: '#C2F1FF'},
+                      //   };
+                      //   RazorpayCheckout.open(options)
+                      //     .then(data => {
+                      //       // handle success
+                      //       alert(`Success: ${data.razorpay_payment_id}`);
+                      //     })
+                      //     .catch(error => {
+                      //       // handle failure
+                      //       alert(`Error: ${error.code} | ${error.description}`);
+                      //     });
+                    }}
+                    style={styles.bookNow}>
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontWeight: '500',
+                        textAlign: 'center',
+                        marginTop: '3%',
+                        color: '#fff',
+                      }}>
+                      Book Now
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            );
+          })}
+          <View>
+            {/* <TouchableOpacity
+              onPress={() => {
+                // const amount = '2000'
+                var options = {
+                  name: res?.state,
+                  description: res?.overview,
+                  image: 'https://i.imgur.com/3g7nmJC.png',
+                  currency: 'INR',
+                  key: 'rzp_test_wJHRrVvmMKlou7', // Your api key
+                  amount: res?.price,
+                  theme: {color: '#C2F1FF'},
+                };
+                RazorpayCheckout.open(options)
+                  .then(data => {
+                    // handle success
+                    alert(`Success: ${data.razorpay_payment_id}`);
+                  })
+                  .catch(error => {
+                    // handle failure
+                    alert(`Error: ${error.code} | ${error.description}`);
+                  });
+              }}
+              style={styles.bookNow}>
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: '500',
+                  textAlign: 'center',
+                  marginTop: '3%',
+                  color: '#fff',
+                }}>
+                Book Now
+              </Text>
+            </TouchableOpacity> */}
+          </View>
+        </View>
+        {/* );
+            })} */}
+        <View>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              Alert.alert('Modal has been closed.');
+              setModalVisible(!modalVisible);
+            }}>
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <CalendarPicker
+                  startFromMonday={true}
+                  allowRangeSelection={true}
+                  minDate={new Date(2010, 1, 1)}
+                  maxDate={new Date(2050, 12, 31)}
+                  width={windowWidth / 1.3}
+                  weekdays={['Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun']}
+                  months={[
+                    'January',
+                    'Febraury',
+                    'March',
+                    'April',
+                    'May',
+                    'June',
+                    'July',
+                    'August',
+                    'September',
+                    'October',
+                    'November',
+                    'December',
+                  ]}
+                  previousTitleStyle={{
+                    color: 'blue',
+                    fontSize: 24,
+                  }}
+                  previousTitle="<"
+                  nextTitleStyle={{
+                    color: 'blue',
+                    fontSize: 24,
+                  }}
+                  nextTitle=">"
+                  todayBackgroundColor="#63B2FB"
+                  selectedDayColor="#63B2FB"
+                  selectedDayTextColor="#fff"
+                  scaleFactor={375}
+                  textStyle={{
+                    fontFamily: 'Cochin',
+                    color: '#000000',
+                    fontSize: 14,
+                  }}
+                  monthTitleStyle={{
                     // backgroundColor: 'pink',
-                    width: windowWidth/1.2,
+                    fontWeight: '700',
+                    fontSize: 18,
+                  }}
+                  yearTitleStyle={{
+                    // backgroundColor: 'grey',
+                    fontWeight: '700',
+                    fontSize: 18,
+                  }}
+                  headerWrapperStyle={{
+                    marginBottom: 20,
+                    // paddingVertical: 20,
+                  }}
+                  onDateChange={onDateChange}
+                  dayLabelsWrapper={{
+                    backgroundColor: '#63B2FB',
+                    borderRadius: 10,
+                    borderColor: 0,
+                  }}
+                />
+                <View
+                  style={{
+                    // backgroundColor: 'pink',
+                    width: windowWidth / 1.2,
                     // height: 40
                   }}>
                   <TextInput
-                  placeholder='Travel With Train, Bus, etc'
+                    placeholder="Travel With Train, Bus, etc"
                     style={styles.input}
-                    keyboardType='default'
+                    keyboardType="default"
                     onChangeText={onChangeText}
                     value={text}
                   />
@@ -504,15 +644,15 @@ const BookNow = ({navigation, route}) => {
                     onChangeText={onChangeNumber}
                     value={number}
                   /> */}
-                  </View>
-                  <Pressable style={[styles.button]} onPress={() => onSubmit()}>
-                    <Text style={styles.textStyle}>OK</Text>
-                  </Pressable>
                 </View>
+                <Pressable style={[styles.button]} onPress={() => onSubmit()}>
+                  <Text style={styles.textStyle}>OK</Text>
+                </Pressable>
               </View>
-            </Modal>
-          </View>
-        </LinearGradient>
+            </View>
+          </Modal>
+        </View>
+        {/* </LinearGradient> */}
       </ScrollView>
     </View>
   );
@@ -593,13 +733,23 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   bookNow: {
-    marginTop: '10%',
+    marginTop: '15%',
     marginBottom: '5%',
     alignSelf: 'center',
     backgroundColor: '#63B2FB',
-    width: windowWidth / 2,
-    height: windowHeight / 18,
-    padding: 5,
+    width: '100%',
+    // height: windowHeight / 18,
+    padding: 10,
     borderRadius: 10,
+  },
+  myStarStyle: {
+    color: 'yellow',
+    backgroundColor: 'transparent',
+    textShadowColor: 'black',
+    textShadowOffset: {width: 1, height: 1},
+    textShadowRadius: 2,
+  },
+  myEmptyStarStyle: {
+    color: 'white',
   },
 });

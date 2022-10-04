@@ -40,7 +40,7 @@ const EditProfile = () => {
   return (
     <View style={styles.container}>
       <ScrollView>
-        <LinearGradient colors={['#C2F1FF', '#F5F5F5']}>
+        {/* <LinearGradient colors={['#C2F1FF', '#F5F5F5']}> */}
           {/* <Text>profile</Text> */}
           <View
             style={{
@@ -122,7 +122,7 @@ const EditProfile = () => {
                 onPress={() => console.log("object")}>
                 <Text style={styles.buttonText}>Submit</Text>
               </TouchableOpacity>
-        </LinearGradient>
+        {/* </LinearGradient> */}
       </ScrollView>
     </View>
   );

@@ -50,7 +50,8 @@ const height = Dimensions.get('window').height
 const styles = StyleSheet.create({
     header: {
         width: width / 1,
-        backgroundColor: '#C2F1FF',
+        // backgroundColor: '#C2F1FF',
+        backgroundColor: '#fff',
         height: height / 14,
         elevation: 5,
         flexDirection: 'row'

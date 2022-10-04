@@ -180,7 +180,7 @@ import {
     }, []);
     console.log('197', res);
     return (
-      <View>
+      <View style={styles.container}>
         <ScrollView>
           {/* <Text>{packageId}</Text> */}
         <StackHeader
@@ -194,7 +194,7 @@ import {
       //  filterColor="black"
       //  filterNavigation={() => filter()}
      />
-          <LinearGradient colors={['#C2F1FF', '#F5F5F5']}>
+          {/* <LinearGradient colors={['#C2F1FF', '#F5F5F5']}> */}
             <View style={styles.map}>
               <Carousel
                 // other props
@@ -458,7 +458,7 @@ import {
                 </View>
               </Modal>
             </View>
-          </LinearGradient>
+          {/* </LinearGradient> */}
         </ScrollView>
       </View>
     );

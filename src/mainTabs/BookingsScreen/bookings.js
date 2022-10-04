@@ -64,7 +64,7 @@ const Bookings = ({navigation}) => {
       //  filterColor="black"
       //  filterNavigation={() => filter()}
      />
-        <LinearGradient colors={['#C2F1FF', '#F5F5F5']}>
+        {/* <LinearGradient colors={['#C2F1FF', '#F5F5F5']}> */}
           {res && res?.map((item)=>{
             return(
           <View style={styles.card}>
@@ -90,7 +90,7 @@ const Bookings = ({navigation}) => {
           </View>
             )
           })}
-        </LinearGradient>
+        {/* </LinearGradient> */}
       </ScrollView>
     </View>
   )

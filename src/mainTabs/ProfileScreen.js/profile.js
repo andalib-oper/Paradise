@@ -60,7 +60,7 @@ const Profile = ({navigation}) => {
   return (
     <View style={styles.container}>
       <ScrollView>
-        <LinearGradient colors={['#C2F1FF', '#F5F5F5']}>
+        {/* <LinearGradient colors={['#C2F1FF', '#F5F5F5']}> */}
           {/* <Text>profile</Text> */}
           <View
             style={{
@@ -226,7 +226,7 @@ const Profile = ({navigation}) => {
             }}
             error="*Required"
           /> */}
-        </LinearGradient>
+        {/* </LinearGradient> */}
       </ScrollView>
     </View>
   );
