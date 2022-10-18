@@ -10,13 +10,13 @@ import React from 'react';
 import Carousel from 'react-native-snap-carousel';
 import SearchBar from 'react-native-dynamic-search-bar';
 import LinearGradient from 'react-native-linear-gradient';
-import OrientationLoadingOverlay from 'react-native-orientation-loading-overlay'
+import OrientationLoadingOverlay from 'react-native-orientation-loading-overlay';
 import {ScrollView} from 'react-native-gesture-handler';
-import { useSelector } from 'react-redux';
-import { useEffect } from 'react';
-import { useState } from 'react';
+import {useSelector} from 'react-redux';
+import {useEffect} from 'react';
+import {useState} from 'react';
 import axios from 'axios';
-import StackHeader from '../../../components/StackHeader'
+import StackHeader from '../../../components/StackHeader';
 
 const horizontalMargin = 10;
 const slideWidth = 280;
@@ -73,10 +73,11 @@ const place = [
   },
 ];
 const Home = ({navigation}) => {
-  const authState = useSelector((state)=> state.authState)
+  const authState = useSelector(state => state.authState);
   // console.log("home screen", authState.id)
-  const [res, setRes] = useState("")
-  const [serachText, setSearchText] = useState("")
+  const [res, setRes] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [serachText, setSearchText] = useState('');
   const renderItem = ({item, index}) => {
     return (
       <View style={styles.slide}>
@@ -86,34 +87,43 @@ const Home = ({navigation}) => {
     );
   };
 
-  const handleOnChangeText = (text) => {
+  const handleOnChangeText = text => {
     // ? Visible the spinner
-  setSearchText(text)
-  console.log("first", text)
-
+    if (text) {
+      // Inserted text is not blank
+      // Filter the masterDataSource and update FilteredDataSource
+      const newData = res.filter(function (item) {
+        // Applying filter for the inserted text in search bar
+        const itemData = item.state
+          ? item.state.toUpperCase()
+          : ''.toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setFilteredData(newData);
+      setSearchText(text);
+    } else {
+      // Inserted text is blank
+      // Update FilteredDataSource with masterDataSource
+      setFilteredData(res);
+      setSearchText(text);
+    }
+    console.log('filter data', filteredData);
+    console.log('search ', serachText);
     // ? After you've done to implement your use-case
     // ? Do not forget to set false to spinner's visibility
   };
-  // useEffect(() => {
-  //   const url = "https://paradis-be-iam.herokuapp.com/api/package";
 
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await fetch(url);
-  //       const json = await response.json();
-  //       // console.log(json);
-  //       setRes(json);
-  //     } catch (error) {
-  //       console.log("error", error);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
+  const clearFilter = (text) => {
+    if(text){
+return res
+    }
+  }
   const url = `https://paradis-be-iam.herokuapp.com/api`;
   useEffect(() => {
-    axios.get(`${url}/package`)
-    .then((response) => {
+    axios.get(`${url}/package`).then(response => {
       setRes(response.data);
+      setFilteredData(response.data);
     });
   }, []);
   // console.log('197', res);
@@ -127,116 +137,219 @@ const Home = ({navigation}) => {
         messageFontSize={24}
         message="Loading... 😀😀😀"
       />
-       <StackHeader
-       headerName="Home"
-     />
+      <StackHeader headerName="Home" />
       <ScrollView>
         {/* <LinearGradient
           colors={['#C2F1FF', '#F5F5F5']}
           style={styles.linearGradient}> */}
+        <View>
+          <SearchBar
+            style={styles.searchbar}
+            placeholder="Search here"
+            // value=
+            // onPress={() => alert('onPress')}
+            onClearPress={()=>handleOnChangeText('')}
+            onChangeText={val => handleOnChangeText(val)}
+          />
+        </View>
+        <View>
+          <Carousel
+            data={data}
+            renderItem={renderItem}
+            sliderWidth={sliderWidth}
+            itemWidth={itemWidth}
+          />
+        </View>
+        <View>
+          <Text style={styles.recomText}>Recommended</Text>
+        </View>
+        {filteredData ? (
+         <View>
+         {filteredData &&
+           filteredData?.map(item => {
+             // console.log("130", item._id)
+             return (
+               <View>
+                 <View style={styles.recomView}>
+                   <Text
+                     style={{
+                       textAlign: 'left',
+                       color: '#000',
+                       fontSize: 16,
+                       fontWeight: '600',
+                       marginTop: '5%',
+                       marginLeft: '8%',
+                     }}>
+                     {item?.state}
+                   </Text>
+                   <Text
+                     style={{
+                       fontSize: 14,
+                       color: 'grey',
+                       marginTop: '2%',
+                       marginLeft: '8%',
+                     }}>
+                     {item.duration}
+                     {'\b'}Trips
+                   </Text>
+                   <Image
+                     style={{
+                       margin: '5%',
+                       alignSelf: 'center',
+                       borderRadius: 10,
+                       width: windowWidth / 1.4,
+                       height: windowHeight / 5,
+                     }}
+                     source={{
+                       // uri: "https://i.imgur.com/MABUbpDl.jpg"
+                       uri: item.packageImage[0]
+                         ? item.packageImage[0]
+                         : 'https://i.imgur.com/MABUbpDl.jpg',
+                     }}
+                   />
+                   <View
+                     style={{
+                       flexDirection: 'row',
+                       marginBottom: '5%',
+                     }}>
+                     <View
+                       style={{
+                         width: '40%',
+                         // backgroundColor: 'red',
+                         marginLeft: '8%',
+                       }}>
+                       <Text
+                         style={{
+                           textAlign: 'left',
+                           fontSize: 14,
+                           color: 'grey',
+                           marginTop: '2%',
+                           //  marginLeft: '8%',
+                         }}>
+                         Rs. {item.price} {'\b \b'}
+                         <Text
+                           style={{
+                             fontSize: 14,
+                             color: 'green',
+                             marginTop: '2%',
+                             marginLeft: '8%',
+                           }}>
+                           {item.inclusion}
+                         </Text>
+                       </Text>
+                     </View>
+                     <View style={{marginLeft: '20%'}}>
+                       <TouchableOpacity
+                         onPress={() =>
+                           navigation.navigate('details', {
+                             packageId: item._id,
+                           })
+                         }
+                         // onPress={()=> console.log("object", item._id)}
+                         style={styles.bookNow}>
+                         <Text style={{color: '#fff'}}>View Details</Text>
+                       </TouchableOpacity>
+                     </View>
+                   </View>
+                 </View>
+               </View>
+             );
+           })}
+       </View>
+        ) : (
           <View>
-            <SearchBar
-              style={styles.searchbar}
-              placeholder="Search here"
-              // value=
-              onPress={() => alert('onPress')}
-              onChangeText={val => handleOnChangeText(val)}
-            />
-          </View>
-          <View>
-            <Carousel
-              // ref={(c) => {carousel = c; }}
-              data={data}
-              renderItem={renderItem}
-              sliderWidth={sliderWidth}
-              itemWidth={itemWidth}
-            />
-          </View>
-          <View>
-            <Text style={styles.recomText}>Recommended</Text>
-          </View>
-          {res && res?.map((item) => {
-            // console.log("130", item._id)
-            return (
-              <View>
-                <View style={styles.recomView}>
-                  <Text
-                    style={{
-                      textAlign: 'left',
-                      color: '#000',
-                      fontSize: 16,
-                      fontWeight: '600',
-                      marginTop: '5%',
-                      marginLeft: '8%',
-                    }}>
-                    {item?.state}
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      color: 'grey',
-                      marginTop: '2%',
-                      marginLeft: '8%',
-                    }}>
-                    {item.duration}{'\b'}Trips
-                  </Text>
-                  <Image
-                    style={{
-                      margin: '5%',
-                      alignSelf: 'center',
-                      borderRadius: 10,
-                      width: windowWidth / 1.4,
-                      height: windowHeight / 5,
-                    }}
-                    source={{
-                      // uri: "https://i.imgur.com/MABUbpDl.jpg"
-                      uri: (item.packageImage[0])? (item.packageImage[0]): "https://i.imgur.com/MABUbpDl.jpg"
-                    }}
-                  />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      marginBottom: '5%',
-                    }}>
-                    <View
-                      style={{
-                        width: '40%',
-                        // backgroundColor: 'red',
-                        marginLeft: '8%',
-                      }}>
+            {res &&
+              res?.map(item => {
+                // console.log("130", item._id)
+                return (
+                  <View>
+                    <View style={styles.recomView}>
                       <Text
                         style={{
                           textAlign: 'left',
+                          color: '#000',
+                          fontSize: 16,
+                          fontWeight: '600',
+                          marginTop: '5%',
+                          marginLeft: '8%',
+                        }}>
+                        {item?.state}
+                      </Text>
+                      <Text
+                        style={{
                           fontSize: 14,
                           color: 'grey',
                           marginTop: '2%',
-                          //  marginLeft: '8%',
+                          marginLeft: '8%',
                         }}>
-                        Rs. {item.price} {'\b \b'}
-                        <Text
+                        {item.duration}
+                        {'\b'}Trips
+                      </Text>
+                      <Image
+                        style={{
+                          margin: '5%',
+                          alignSelf: 'center',
+                          borderRadius: 10,
+                          width: windowWidth / 1.4,
+                          height: windowHeight / 5,
+                        }}
+                        source={{
+                          // uri: "https://i.imgur.com/MABUbpDl.jpg"
+                          uri: item.packageImage[0]
+                            ? item.packageImage[0]
+                            : 'https://i.imgur.com/MABUbpDl.jpg',
+                        }}
+                      />
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          marginBottom: '5%',
+                        }}>
+                        <View
                           style={{
-                            fontSize: 14,
-                            color: 'green',
-                            marginTop: '2%',
+                            width: '40%',
+                            // backgroundColor: 'red',
                             marginLeft: '8%',
                           }}>
-                          {item.inclusion}
-                        </Text>
-                      </Text>
-                    </View>
-                    <View style={{marginLeft: '20%'}}>
-                      <TouchableOpacity
-                        onPress={() => navigation.navigate('details',{ packageId: item._id})}
-                        // onPress={()=> console.log("object", item._id)}
-                        style={styles.bookNow}>
-                        <Text style={{color: '#fff'}}>View Details</Text>
-                      </TouchableOpacity>
+                          <Text
+                            style={{
+                              textAlign: 'left',
+                              fontSize: 14,
+                              color: 'grey',
+                              marginTop: '2%',
+                              //  marginLeft: '8%',
+                            }}>
+                            Rs. {item.price} {'\b \b'}
+                            <Text
+                              style={{
+                                fontSize: 14,
+                                color: 'green',
+                                marginTop: '2%',
+                                marginLeft: '8%',
+                              }}>
+                              {item.inclusion}
+                            </Text>
+                          </Text>
+                        </View>
+                        <View style={{marginLeft: '20%'}}>
+                          <TouchableOpacity
+                            onPress={() =>
+                              navigation.navigate('details', {
+                                packageId: item._id,
+                              })
+                            }
+                            // onPress={()=> console.log("object", item._id)}
+                            style={styles.bookNow}>
+                            <Text style={{color: '#fff'}}>View Details</Text>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
                     </View>
                   </View>
-                </View>
-              </View>
-            );
-          })}
+                );
+              })}
+          </View>
+        )}
         {/* </LinearGradient> */}
       </ScrollView>
     </View>
