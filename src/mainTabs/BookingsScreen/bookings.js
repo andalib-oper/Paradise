@@ -1,102 +1,132 @@
-import { ScrollView, StyleSheet, Text, View, Dimensions, Image } from 'react-native'
-import React from 'react'
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  Image,
+  RefreshControl,
+} from 'react-native';
+import React from 'react';
 import LinearGradient from 'react-native-linear-gradient';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import StackHeader from '../../../components/StackHeader';
-import { useState, useEffect } from 'react';
+import {useState, useEffect} from 'react';
 import axios from 'axios';
 import moment from 'moment';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
+import {onBlur} from 'deprecated-react-native-prop-types/DeprecatedTextInputPropTypes';
 
 const data = [
   {
     img: 'https://i.imgur.com/UPrs1EWl.jpg',
     title: 'Kashmir',
     des: 'Famous for Gulmarg, drinagar, and many more, visit and enjoy alot.',
-    pack: '4000'
+    pack: '4000',
   },
   {
     img: 'https://i.imgur.com/UPrs1EWl.jpg',
     title: 'Kashmir',
     des: 'Famous for Gulmarg, drinagar, and many more, visit and enjoy alot.',
-    pack: '4000'
+    pack: '4000',
   },
   {
     img: 'https://i.imgur.com/UPrs1EWl.jpg',
     title: 'Kashmir',
     des: 'Famous for Gulmarg, drinagar, and many more, visit and enjoy alot.',
-    pack: '4000'
+    pack: '4000',
   },
   {
     img: 'https://i.imgur.com/UPrs1EWl.jpg',
     title: 'Kashmir',
     des: 'Famous for Gulmarg, drinagar, and many more, visit and enjoy alot.',
-    pack: '4000'
-  }
-]
+    pack: '4000',
+  },
+];
 const Bookings = ({navigation}) => {
-  const [res, setRes] = useState("")
-  const authState = useSelector((state)=>state.authState)
+  const [res, setRes] = useState('');
+  const [refreshing, setRefreshing] = useState(false);
+  const authState = useSelector(state => state.authState);
   const url = `https://paradis-be-iam.herokuapp.com/api`;
   useEffect(() => {
-    axios.get(`${url}/booking/user/${authState.id}`)
-    .then((response) => {
+    setRefreshing(true);
+    axios.get(`${url}/booking/user/${authState.id}`).then(response => {
       setRes(response.data);
+      setRefreshing(false);
     });
   }, []);
   console.log('booking', res, authState.id);
-  const formatDate = (date) => {
-    const arr = date.split("-")
-    const formatStr = `${arr[2]}-${arr[1]}-${arr[0]}`
-    return formatStr
-  }
+  const formatDate = date => {
+    const arr = date.split('-');
+    const formatStr = `${arr[2]}-${arr[1]}-${arr[0]}`;
+    return formatStr;
+  };
+  const onCancel = () => {
+    console.log('cancellig booking ');
+  };
   return (
-    <View>
-      <ScrollView>
-      <StackHeader
-       headerName="Bookings"
-       name="arrow-left"
-       size={24}
-       color="black"
-       headerNavigation={() => navigation.goBack()}
-      //  filterName="filter"
-      //  filterSize={28}
-      //  filterColor="black"
-      //  filterNavigation={() => filter()}
-     />
+    <View style={styles.container}>
+      <ScrollView
+      refreshControl={<RefreshControl
+      refreshing={refreshing}
+      onRefresh={refreshing}
+      />}
+      >
+        <StackHeader
+          headerName="Bookings"
+          //  name="arrow-left"
+          size={24}
+          color="black"
+          headerNavigation={() => navigation.goBack()}
+          //  filterName="filter"
+          //  filterSize={28}
+          //  filterColor="black"
+          //  filterNavigation={() => filter()}
+        />
         {/* <LinearGradient colors={['#C2F1FF', '#F5F5F5']}> */}
-          {res && res?.map((item)=>{
-            return(
-          <View style={styles.card}>
-            <View style={styles.cardInner}>
-              <Image
-                style={styles.tinyLogo}
-                // source={{uri: (item.)}}
-                // source={require('../../../images/logo.png')}
-              />
-              <View style={{
-                // backgroundColor: 'orange',
-                width: '55%'
-                }}>
-                <Text style={styles.innerText}>{item.transportaionName}</Text>
-                <Text style={styles.package}>{item.transportaionAddress}</Text>
-                {/* <Text style={styles.package}>{formatDate(item.tourStartDate)}</Text> */}
-                <Text style={styles.package}>{moment(item.tourStartDate).format('DD-MM-YYYY')}{'\b'}to{moment(item.tourEndDate).format('DD-MM-YYYY')}</Text>
-                <TouchableOpacity style={styles.button}>
-                  <Text style={styles.buttonText}>Cancel</Text>
-                </TouchableOpacity>
+        {res &&
+          res?.map(item => {
+            return (
+              <View style={styles.card}>
+                <View style={styles.cardInner}>
+                  <Image
+                    style={styles.tinyLogo}
+                    // source={{uri: (item.)}}
+                    // source={require('../../../images/logo.png')}
+                  />
+                  <View
+                    style={{
+                      // backgroundColor: 'orange',
+                      width: '55%',
+                    }}>
+                    <Text style={styles.innerText}>
+                      {item.transportaionName}
+                    </Text>
+                    <Text style={styles.package}>
+                      {item.transportaionAddress}
+                    </Text>
+                    {/* <Text style={styles.package}>{formatDate(item.tourStartDate)}</Text> */}
+                    <Text style={styles.package}>
+                      {moment(item.tourStartDate).format('DD-MM-YYYY')}
+                      {'\b'}to{moment(item.tourEndDate).format('DD-MM-YYYY')}
+                    </Text>
+                    <TouchableOpacity
+                      style={styles.button}
+                      onPress={() => onCancel()}>
+                      <Text style={styles.buttonText}>Cancel</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
               </View>
-            </View>
-          </View>
-            )
+            );
           })}
         {/* </LinearGradient> */}
       </ScrollView>
     </View>
-  )
-}
+  );
+};
 
-export default Bookings
+export default Bookings;
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -104,7 +134,7 @@ const windowHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   card: {
     backgroundColor: '#fff',
@@ -134,7 +164,7 @@ const styles = StyleSheet.create({
     marginLeft: '5%',
     fontSize: 18,
     color: '#000',
-    fontWeight: '600'
+    fontWeight: '600',
   },
   package: {
     // backgroundColor: 'blue',
@@ -143,7 +173,7 @@ const styles = StyleSheet.create({
     marginBottom: '2%',
     fontSize: 14,
     color: '#000',
-    fontWeight: '400'
+    fontWeight: '400',
   },
   button: {
     alignSelf: 'flex-end',
@@ -158,6 +188,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '400',
     color: 'white',
-    textAlign: 'center'
-  }
-})
+    textAlign: 'center',
+  },
+});

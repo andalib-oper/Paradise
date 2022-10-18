@@ -31,7 +31,7 @@ const Packages = () => {
     <View style={styles.container}>
        <StackHeader
        headerName="Package"
-       name="arrow-left"
+      //  name="arrow-left"
        size={24}
        color="black"
        headerNavigation={() => navigation.goBack()}

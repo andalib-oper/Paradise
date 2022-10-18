@@ -22,7 +22,7 @@ const ProfileNavigator = ({navigation, route}) => {
         <Stack.Navigator  initialRouteName='profile'>
             <Stack.Screen name='profile' component={Profile} 
              options={{
-                headerShown: true,
+                headerShown: false,
                 headerStyle: { backgroundColor: '#C2F1FF',},
                 headerTitle: 'Profile',
                 headerLeft: () => (
@@ -37,7 +37,7 @@ const ProfileNavigator = ({navigation, route}) => {
             />
             <Stack.Screen name='editprofile' component={EditProfile} 
              options={{
-                headerShown: true,
+                headerShown: false,
                 headerStyle: { backgroundColor: '#C2F1FF',},
                 headerTitle: 'Edit Profile',
                 headerLeft: () => (

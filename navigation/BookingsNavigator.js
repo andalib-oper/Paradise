@@ -24,14 +24,14 @@ const BookingsNavigator = ({navigation, route}) => {
                 headerShown: false,
                 headerStyle: { backgroundColor: '#C2F1FF',},
                 headerTitle: 'Bookings',
-                headerLeft: () => (
-                    <MaterialIcons
-                      name="arrow-back"
-                      color='black'
-                      size={26}
-                      style={{ marginLeft: 10, }}
-                      onPress={() => navigation.goBack()} />
-                  ),
+                // headerLeft: () => (
+                //     <MaterialIcons
+                //       name="arrow-back"
+                //       color='black'
+                //       size={26}
+                //       style={{ marginLeft: 10, }}
+                //       onPress={() => navigation.goBack()} />
+                //   ),
             }}
             />
         </Stack.Navigator>

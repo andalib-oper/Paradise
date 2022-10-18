@@ -7,7 +7,8 @@ import {
   Image,
 } from 'react-native';
 import React, {useState} from 'react';
-import {useDispatch} from 'react-redux';
+import StackHeader from '../../../components/StackHeader';
+import {useDispatch, useSelector} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import AddProductsTextInput from '../../../components/AddProductsTextInput';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -26,7 +27,8 @@ const data = [
 const Profile = ({navigation}) => {
   const [res, setRes] = useState('');
   const dispatch = useDispatch();
-
+const authState =  useSelector((state)=> state.authState)
+console.log("profile authState", authState)
   // useEffect(() => {
   //   dispatch(stateCleanup());
   // }, [dispatch]);
@@ -62,6 +64,17 @@ const Profile = ({navigation}) => {
       <ScrollView>
         {/* <LinearGradient colors={['#C2F1FF', '#F5F5F5']}> */}
           {/* <Text>profile</Text> */}
+          <StackHeader
+       headerName="Profile"
+      //  name="arrow-left"
+       size={24}
+       color="black"
+       headerNavigation={() => navigation.goBack()}
+      //  filterName="filter"
+      //  filterSize={28}
+      //  filterColor="black"
+      //  filterNavigation={() => filter()}
+     />
           <View
             style={{
               marginTop: '5%',
@@ -77,8 +90,8 @@ const Profile = ({navigation}) => {
               Your Profile Details
             </Text>
           </View>
-          {data.map(item => {
-            return (
+          {/* {authState && authState.map(item => {
+            return ( */}
               <View>
                 <View style={{marginTop: '10%', height: windowHeight / 10}}>
                   <Text style={styles.header}>First Name</Text>
@@ -95,9 +108,10 @@ const Profile = ({navigation}) => {
                       style={{
                         marginLeft: '2%',
                         fontSize: 16,
+                        color: 'grey'
                         // backgroundColor: 'pink'
                       }}>
-                      {item.firstName}
+                      {authState.firstName}
                     </Text>
                   </View>
                 </View>
@@ -116,9 +130,10 @@ const Profile = ({navigation}) => {
                       style={{
                         marginLeft: '2%',
                         fontSize: 16,
+                        color: 'grey'
                         // backgroundColor: 'pink'
                       }}>
-                      {item.lastName}
+                      {authState.lastName}
                     </Text>
                   </View>
                 </View>
@@ -137,9 +152,10 @@ const Profile = ({navigation}) => {
                       style={{
                         marginLeft: '2%',
                         fontSize: 16,
+                        color: 'grey'
                         // backgroundColor: 'pink'
                       }}>
-                      {item.Address}
+                      {authState.role}
                     </Text>
                   </View>
                 </View>
@@ -158,13 +174,14 @@ const Profile = ({navigation}) => {
                       style={{
                         marginLeft: '2%',
                         fontSize: 16,
+                        color: 'grey'
                         // backgroundColor: 'pink'
                       }}>
-                      {item.email}
+                      {authState.email}
                     </Text>
                   </View>
                 </View>
-                <View style={{marginTop: '2%', height: windowHeight / 10}}>
+                {/* <View style={{marginTop: '2%', height: windowHeight / 10}}>
                   <Text style={styles.header}>Phone Number</Text>
                   <View
                     style={{
@@ -179,15 +196,16 @@ const Profile = ({navigation}) => {
                       style={{
                         marginLeft: '2%',
                         fontSize: 16,
+                        color: 'grey'
                         // backgroundColor: 'pink'
                       }}>
                       {item.phoneNo}
                     </Text>
                   </View>
-                </View>
+                </View> */}
               </View>
-            );
-          })}
+            {/* );
+          })} */}
           <View
             style={{
               flexDirection: 'row',
@@ -240,6 +258,7 @@ const windowHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff'
   },
   header: {
     marginLeft: '10%',

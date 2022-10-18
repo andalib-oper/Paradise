@@ -74,11 +74,9 @@ const place = [
 ];
 const Home = ({navigation}) => {
   const authState = useSelector((state)=> state.authState)
-  console.log("home screen", authState.id)
+  // console.log("home screen", authState.id)
   const [res, setRes] = useState("")
-  const onSubmit = () => {
-    console.log('first');
-  };
+  const [serachText, setSearchText] = useState("")
   const renderItem = ({item, index}) => {
     return (
       <View style={styles.slide}>
@@ -86,6 +84,15 @@ const Home = ({navigation}) => {
         <Image style={styles.image} source={{uri: item.illustration}} />
       </View>
     );
+  };
+
+  const handleOnChangeText = (text) => {
+    // ? Visible the spinner
+  setSearchText(text)
+  console.log("first", text)
+
+    // ? After you've done to implement your use-case
+    // ? Do not forget to set false to spinner's visibility
   };
   // useEffect(() => {
   //   const url = "https://paradis-be-iam.herokuapp.com/api/package";
@@ -109,7 +116,7 @@ const Home = ({navigation}) => {
       setRes(response.data);
     });
   }, []);
-  console.log('197', res);
+  // console.log('197', res);
   // console.log("object", res)
   return (
     <View style={styles.container}>
@@ -131,8 +138,9 @@ const Home = ({navigation}) => {
             <SearchBar
               style={styles.searchbar}
               placeholder="Search here"
+              // value=
               onPress={() => alert('onPress')}
-              onChangeText={val => onSubmit(val)}
+              onChangeText={val => handleOnChangeText(val)}
             />
           </View>
           <View>
@@ -148,7 +156,7 @@ const Home = ({navigation}) => {
             <Text style={styles.recomText}>Recommended</Text>
           </View>
           {res && res?.map((item) => {
-            console.log("130", item._id)
+            // console.log("130", item._id)
             return (
               <View>
                 <View style={styles.recomView}>

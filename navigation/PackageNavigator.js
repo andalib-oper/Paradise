@@ -30,14 +30,14 @@ const PackageNavigator = ({navigation, route}) => {
               headerShown:false,
                 headerTitle: 'Details',
               headerStyle: { backgroundColor: '#C2F1FF',},
-              headerLeft: () => (
-                <MaterialIcons
-                  name="arrow-back"
-                  color='black'
-                  size={26}
-                  style={{ marginLeft: 10, }}
-                  onPress={() => navigation.goBack()} />
-              ),
+              // headerLeft: () => (
+              //   <MaterialIcons
+              //     name="arrow-back"
+              //     color='black'
+              //     size={26}
+              //     style={{ marginLeft: 10, }}
+              //     onPress={() => navigation.goBack()} />
+              // ),
             }} 
             />
         </Stack.Navigator>

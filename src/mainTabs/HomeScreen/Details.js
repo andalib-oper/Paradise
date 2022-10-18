@@ -9,6 +9,7 @@ import {
   Modal,
   TouchableOpacity,
   TextInput,
+  Alert,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Carousel, {getInputRangeFromIndexes} from 'react-native-snap-carousel';
@@ -87,7 +88,7 @@ const BookNow = ({navigation, route}) => {
   const onSubmit = () => {
     modelClose();
   };
-  console.log('persond day', text, number, authState.accessToken);
+  console.log('persond day', text, authState.accessToken);
   console.log('selected date', selectedStartDate, selectedEndDate);
   const WATER_IMAGE = require('../../../images/star.png');
 
@@ -201,6 +202,7 @@ const BookNow = ({navigation, route}) => {
   // console.log('197', hotels[0].city);
   const BookNow = (id,accessToken) => {
     try {
+      console.log("details hotel id ", id )
       const response = axios
       .post(
       `https://paradis-be-iam.herokuapp.com/api/booking`,
@@ -216,11 +218,13 @@ const BookNow = ({navigation, route}) => {
           headers: { Authorization: "Bearer "+ authState.accessToken },
         }
       )
-      if (response.data === 200) {
+      if (response) {
         console.log("200", response.data)
+        Alert.alert("booked successfully")
       } 
     } catch (error) {
-      console.log("error", error)
+      console.log("error", error.response)
+      Alert.alert("catching error")
     }
     // console.log("object", authState.accessToken)
       // console.log("token", Headers)
@@ -476,7 +480,8 @@ const BookNow = ({navigation, route}) => {
                   <TouchableOpacity
                     onPress={() => {
                       // BookNow(item.id);
-                      console.log("onbook now")
+                      // console.log("onbook now")
+                      BookNow(item?.id)
                       // const amount = '2000'
                       //   var options = {
                       //     name: res?.state,
