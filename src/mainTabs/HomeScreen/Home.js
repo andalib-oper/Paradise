@@ -9,13 +9,13 @@ import {
 import React from 'react';
 import Carousel from 'react-native-snap-carousel';
 import SearchBar from 'react-native-dynamic-search-bar';
-import LinearGradient from 'react-native-linear-gradient';
 import OrientationLoadingOverlay from 'react-native-orientation-loading-overlay';
 import {ScrollView} from 'react-native-gesture-handler';
 import {useSelector} from 'react-redux';
 import {useEffect} from 'react';
 import {useState} from 'react';
 import axios from 'axios';
+import LinearGradient from 'react-native-linear-gradient';
 import StackHeader from '../../../components/StackHeader';
 
 const horizontalMargin = 10;
@@ -98,6 +98,7 @@ const Home = ({navigation}) => {
           ? item.state.toUpperCase()
           : ''.toUpperCase();
         const textData = text.toUpperCase();
+        console.log("text data", textData)
         return itemData.indexOf(textData) > -1;
       });
       setFilteredData(newData);
@@ -139,9 +140,9 @@ return res
       />
       <StackHeader headerName="Home" />
       <ScrollView>
-        {/* <LinearGradient
+        <LinearGradient
           colors={['#C2F1FF', '#F5F5F5']}
-          style={styles.linearGradient}> */}
+          style={styles.linearGradient}>
         <View>
           <SearchBar
             style={styles.searchbar}
@@ -258,8 +259,7 @@ return res
        </View>
         ) : (
           <View>
-            {res &&
-              res?.map(item => {
+            {res.slice(0,2)&&res.map(item => {
                 // console.log("130", item._id)
                 return (
                   <View>
@@ -350,7 +350,7 @@ return res
               })}
           </View>
         )}
-        {/* </LinearGradient> */}
+        </LinearGradient>
       </ScrollView>
     </View>
   );

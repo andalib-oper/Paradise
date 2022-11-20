@@ -17,6 +17,7 @@ const mainNavigator = () => {
       // tabBarStyle: {
       //   backgroundColor: 'white'
       // },
+      tabBarHideOnKeyboard: true,
       headerShown: false
     }}
     initialRouteName="home">

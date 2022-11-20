@@ -10,6 +10,7 @@ import {
 } from './actionTypes';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Alert } from 'react-native';
 
 export const req = () => ({
   type: REQ,
@@ -106,8 +107,9 @@ export const logUserIn = (loginData) => {
       if (err.message.includes('401')) {
         dispatch(reqFailure('Invalid credentials!'));
       } else {
-        console.log(err.mesage)
-        dispatch(reqFailure(err.message));
+        console.log(err.response.data.error)
+        Alert.alert(err.response.data.error)
+        dispatch(reqFailure(err.response.data.error));
       }
     }
   };

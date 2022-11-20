@@ -202,7 +202,7 @@ const BookNow = ({navigation, route}) => {
   // console.log('197', hotels[0].city);
   const BookNow = (id,accessToken) => {
     try {
-      console.log("details hotel id ", id )
+      // console.log("details hotel id ", id, packageId )
       const response = axios
       .post(
       `https://paradis-be-iam.herokuapp.com/api/booking`,
@@ -219,13 +219,33 @@ const BookNow = ({navigation, route}) => {
         }
       )
       if (response) {
-        console.log("200", response.data)
+        console.log("200", response)
         Alert.alert("booked successfully")
+        navigation.navigate('home')
       } 
     } catch (error) {
       console.log("error", error.response)
       Alert.alert("catching error")
     }
+    var options = {
+          name: res?.state,
+          description: res?.overview,
+          image: 'https://i.imgur.com/3g7nmJC.png',
+          currency: 'INR',
+          key: 'rzp_test_wJHRrVvmMKlou7', // Your api key
+          amount: res?.price,
+          theme: {color: '#C2F1FF'},
+        };
+        RazorpayCheckout.open(options)
+          .then(data => {
+            // handle success
+            alert(`Success: ${data.razorpay_payment_id}`);
+          })
+          .catch(error => {
+            // handle failure
+            console.log("Error", error.code,error.description )
+            // alert(`Error: ${error.code} | ${error.description}`);
+          });
     // console.log("object", authState.accessToken)
       // console.log("token", Headers)
       // .then(response => {
@@ -256,7 +276,7 @@ const BookNow = ({navigation, route}) => {
           //  filterColor="black"
           //  filterNavigation={() => filter()}
         />
-        {/* <LinearGradient colors={['#C2F1FF', '#F5F5F5']}> */}
+        <LinearGradient colors={['#C2F1FF', '#F5F5F5']}>
         {/* {res && res?.map(item => {
               console.log('object', res);
               return ( */}
@@ -326,29 +346,18 @@ const BookNow = ({navigation, route}) => {
                         onFinishRating={ratingCompleted}
                         style={{marginTop: '2%'}}
                       /> */}
-              <Stars
-                display={3.67}
-                spacing={5}
-                count={5}
-                starSize={20}
-                fullStar={
-                  <Icon name="star" size={20} style={[styles.myStarStyle]} />
-                }
-                emptyStar={
-                  <Icon
-                    name="star-outline"
-                    size={20}
-                    style={[styles.myStarStyle, styles.myEmptyStarStyle]}
-                  />
-                }
-                halfStar={
-                  <Icon
-                    name="star-half"
-                    size={20}
-                    style={[styles.myStarStyle]}
-                  />
-                }
-              />
+            <Rating
+                  type="custom"
+                  ratingImage={WATER_IMAGE}
+                  // ratingColor="#3498db"
+                  // ratingBackgroundColor="#c8c7c8"
+                  // startingValue={ratingCount/2}
+                  // showRating={}
+                  ratingCount={5}
+                  imageSize={20}
+                  onFinishRating={ratingCompleted}
+                  style={{marginTop: '2%'}}
+                />
             </View>
             <View
               style={{
@@ -480,27 +489,7 @@ const BookNow = ({navigation, route}) => {
                   <TouchableOpacity
                     onPress={() => {
                       // BookNow(item.id);
-                      // console.log("onbook now")
                       BookNow(item?.id)
-                      // const amount = '2000'
-                      //   var options = {
-                      //     name: res?.state,
-                      //     description: res?.overview,
-                      //     image: 'https://i.imgur.com/3g7nmJC.png',
-                      //     currency: 'INR',
-                      //     key: 'rzp_test_wJHRrVvmMKlou7', // Your api key
-                      //     amount: res?.price,
-                      //     theme: {color: '#C2F1FF'},
-                      //   };
-                      //   RazorpayCheckout.open(options)
-                      //     .then(data => {
-                      //       // handle success
-                      //       alert(`Success: ${data.razorpay_payment_id}`);
-                      //     })
-                      //     .catch(error => {
-                      //       // handle failure
-                      //       alert(`Error: ${error.code} | ${error.description}`);
-                      //     });
                     }}
                     style={styles.bookNow}>
                     <Text
@@ -657,7 +646,7 @@ const BookNow = ({navigation, route}) => {
             </View>
           </Modal>
         </View>
-        {/* </LinearGradient> */}
+        </LinearGradient>
       </ScrollView>
     </View>
   );

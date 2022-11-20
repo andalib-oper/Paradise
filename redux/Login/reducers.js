@@ -5,7 +5,7 @@ import {UPDATE_FIELDS,
   const initialState = {
     inputValues: {
       email: 'andalib5@gmail.com',
-      password: '12345678',
+      password: '87654321',
     },
     inputValidity: {
       email: true,

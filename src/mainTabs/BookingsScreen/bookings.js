@@ -6,6 +6,7 @@ import {
   Dimensions,
   Image,
   RefreshControl,
+  Alert,
 } from 'react-native';
 import React from 'react';
 import LinearGradient from 'react-native-linear-gradient';
@@ -45,33 +46,51 @@ const data = [
 ];
 const Bookings = ({navigation}) => {
   const [res, setRes] = useState('');
+  const [del, setDel] = useState('');
   const [refreshing, setRefreshing] = useState(false);
   const authState = useSelector(state => state.authState);
   const url = `https://paradis-be-iam.herokuapp.com/api`;
   useEffect(() => {
-    setRefreshing(true);
+    // setRefreshing(true);
     axios.get(`${url}/booking/user/${authState.id}`).then(response => {
       setRes(response.data);
-      setRefreshing(false);
+      // setRefreshing(false);
     });
   }, []);
-  console.log('booking', res, authState.id);
+  console.log('booking', authState.id, res);
   const formatDate = date => {
     const arr = date.split('-');
     const formatStr = `${arr[2]}-${arr[1]}-${arr[0]}`;
     return formatStr;
   };
-  const onCancel = () => {
-    console.log('cancellig booking ');
+  const refresh = () => {
+    axios.get(`${url}/booking/user/${authState.id}`).then(response => {
+      setRes(response.data);
+      setRefreshing(false);
+    });
+  }
+  const onCancel = id => {
+    console.log('cancellig booking ', id);
+    axios
+      .put(`${url}/booking/${id}`, 
+      {
+        isValid: false,
+      })
+      .then(response => {
+        setRefreshing(true);
+        console.log("res", response.data)
+        Alert.alert(response.data.message)
+        // navigation.navigate('home')
+        setDel(response.data);
+        setRefreshing(false);
+
+      })
+      .catch(err => console.log('object', err.response.data));
+      refresh()
   };
   return (
     <View style={styles.container}>
-      <ScrollView
-      refreshControl={<RefreshControl
-      refreshing={refreshing}
-      onRefresh={refreshing}
-      />}
-      >
+      <ScrollView>
         <StackHeader
           headerName="Bookings"
           //  name="arrow-left"
@@ -83,10 +102,11 @@ const Bookings = ({navigation}) => {
           //  filterColor="black"
           //  filterNavigation={() => filter()}
         />
-        {/* <LinearGradient colors={['#C2F1FF', '#F5F5F5']}> */}
+        <LinearGradient colors={['#C2F1FF', '#F5F5F5']}>
         {res &&
           res?.map(item => {
             return (
+              <View>
               <View style={styles.card}>
                 <View style={styles.cardInner}>
                   <Image
@@ -112,15 +132,16 @@ const Bookings = ({navigation}) => {
                     </Text>
                     <TouchableOpacity
                       style={styles.button}
-                      onPress={() => onCancel()}>
+                      onPress={() => onCancel(item?._id)}>
                       <Text style={styles.buttonText}>Cancel</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
               </View>
+              </View>
             );
           })}
-        {/* </LinearGradient> */}
+        </LinearGradient>
       </ScrollView>
     </View>
   );

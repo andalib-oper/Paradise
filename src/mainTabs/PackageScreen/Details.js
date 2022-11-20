@@ -7,6 +7,8 @@ import {
     Dimensions,
     Pressable,
     Modal,
+    Alert,
+    TextInput,
     TouchableOpacity,
   } from 'react-native';
   import LinearGradient from 'react-native-linear-gradient';
@@ -20,6 +22,7 @@ import {
   import axios from 'axios';
   import React from 'react';
   import {useState, useEffect} from 'react';
+import { useSelector } from 'react-redux';
   
   const {width: viewportWidth, height: viewportHeight} = Dimensions.get('window');
   const carouselItem = [
@@ -57,8 +60,11 @@ import {
   const BookNow = ({navigation, route}) => {
     const {packageId} = route.params
     const [res, setRes] = useState()
+    const [text, onChangeText]=useState('')
+    const [hotels, setHotels] = useState();
     const [starCount, setStarCount] = useState();
     const [modalVisible, setModalVisible] = useState(false);
+    const authState = useSelector((state)=>state.authState)
     const [selectedStartDate, setSelectedStartDate] = useState(
       moment().format('YYYY-MM-DD'),
     );
@@ -178,7 +184,60 @@ import {
         setRes(response.data);
       });
     }, []);
-    console.log('197', res);
+    const hotel = `http://fake-hotel-api.herokuapp.com/api/hotels?no_error=1`;
+    useEffect(() => {
+      axios.get(`${hotel}`).then(response => {
+        setHotels(response.data);
+      });
+    }, []);
+    const bookNow = (id,accessToken) => {
+      try {
+        console.log("details hotel id ", id, packageId )
+        const response = axios
+        .post(
+        `https://paradis-be-iam.herokuapp.com/api/booking`,
+          {
+            packageId: packageId,
+            hotelId: id,
+            transportaionName: text,
+            transportaionAddress: '2/2 gopal road',
+            tourStartDate: selectedStartDate,
+            tourEndDate: selectedEndDate,
+          },
+          {
+            headers: { Authorization: "Bearer "+ authState.accessToken },
+          }
+        )
+        if (response) {
+          console.log("200", response)
+          Alert.alert("booked successfully")
+          navigation.navigate('home')
+        } 
+      } catch (error) {
+        console.log("error", error.response)
+        Alert.alert("catching error")
+      }
+      var options = {
+            name: res?.state,
+            description: res?.overview,
+            image: 'https://i.imgur.com/3g7nmJC.png',
+            currency: 'INR',
+            key: 'rzp_test_wJHRrVvmMKlou7', // Your api key
+            amount: res?.price,
+            theme: {color: '#C2F1FF'},
+          };
+          RazorpayCheckout.open(options)
+            .then(data => {
+              // handle success
+              alert(`Success: ${data.razorpay_payment_id}`);
+            })
+            .catch(error => {
+              // handle failure
+              console.log("Error", error.code,error.description )
+              // alert(`Error: ${error.code} | ${error.description}`);
+            });
+    };
+    // console.log('197', res);
     return (
       <View style={styles.container}>
         <ScrollView>
@@ -194,7 +253,7 @@ import {
       //  filterColor="black"
       //  filterNavigation={() => filter()}
      />
-          {/* <LinearGradient colors={['#C2F1FF', '#F5F5F5']}> */}
+          <LinearGradient colors={['#C2F1FF', '#F5F5F5']}>
             <View style={styles.map}>
               <Carousel
                 // other props
@@ -250,10 +309,11 @@ import {
                 <Rating
                   type="custom"
                   ratingImage={WATER_IMAGE}
+                  readonly={true}
                   // ratingColor="#3498db"
                   // ratingBackgroundColor="#c8c7c8"
                   // startingValue={ratingCount/2}
-                  // showRating={}
+                  // showRating
                   ratingCount={5}
                   imageSize={20}
                   onFinishRating={ratingCompleted}
@@ -334,8 +394,89 @@ import {
                 {res?.overview}
               </Text>
             </View>
+            {hotels?.map(item => {
+            // console.log('object', item.id);
+            return (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginTop: '5%',
+                  marginLeft: '5%',
+                  marginRight: '5%',
+                  elevation: 10,
+                  borderRadius: 10,
+                  backgroundColor: '#fff',
+                }}>
+                <View style={{width: '70%'}}>
+                  <Text
+                    style={{
+                      textAlign: 'left',
+                      color: 'grey',
+                      fontSize: 14,
+                      fontWeight: '400',
+                      marginTop: '4%',
+                      marginLeft: '10%',
+                      marginBottom: '4%',
+                    }}>
+                    <Text
+                      style={{
+                        color: 'black',
+                        fontSize: 16,
+                        fontWeight: '500',
+                      }}>
+                      {item?.name}
+                      {/* frieds */}
+                      {'\n'}
+                    </Text>
+                    {'\n'}
+                    {/* hello */}
+                    {item?.city}
+                  </Text>
+                </View>
+                <View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      // BookNow(item.id);
+                      // console.log("onbook now")
+                      bookNow(item?.id)
+                      // const amount = '2000'
+                      //   var options = {
+                      //     name: res?.state,
+                      //     description: res?.overview,
+                      //     image: 'https://i.imgur.com/3g7nmJC.png',
+                      //     currency: 'INR',
+                      //     key: 'rzp_test_wJHRrVvmMKlou7', // Your api key
+                      //     amount: res?.price,
+                      //     theme: {color: '#C2F1FF'},
+                      //   };
+                      //   RazorpayCheckout.open(options)
+                      //     .then(data => {
+                      //       // handle success
+                      //       alert(`Success: ${data.razorpay_payment_id}`);
+                      //     })
+                      //     .catch(error => {
+                      //       // handle failure
+                      //       alert(`Error: ${error.code} | ${error.description}`);
+                      //     });
+                    }}
+                    style={styles.bookNow}>
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontWeight: '500',
+                        textAlign: 'center',
+                        marginTop: '3%',
+                        color: '#fff',
+                      }}>
+                      Book Now
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            );
+          })}
             <View>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 onPress={() => {
                   // const amount = '2000'
                   var options = {
@@ -369,96 +510,109 @@ import {
                   }}>
                   Book Now
                 </Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
             <View>
-              <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                  Alert.alert('Modal has been closed.');
-                  setModalVisible(!modalVisible);
-                }}>
-                <View style={styles.centeredView}>
-                  <View style={styles.modalView}>
-                    <CalendarPicker
-                      startFromMonday={true}
-                      allowRangeSelection={true}
-                      minDate={new Date(2010, 1, 1)}
-                      maxDate={new Date(2050, 12, 31)}
-                      width={windowWidth / 1.3}
-                      weekdays={[
-                        'Mon',
-                        'Tue',
-                        'Wed',
-                        'Thur',
-                        'Fri',
-                        'Sat',
-                        'Sun',
-                      ]}
-                      months={[
-                        'January',
-                        'Febraury',
-                        'March',
-                        'April',
-                        'May',
-                        'June',
-                        'July',
-                        'August',
-                        'September',
-                        'October',
-                        'November',
-                        'December',
-                      ]}
-                      previousTitleStyle={{
-                        color: 'blue',
-                        fontSize: 24,
-                      }}
-                      previousTitle="<"
-                      nextTitleStyle={{
-                        color: 'blue',
-                        fontSize: 24,
-                      }}
-                      nextTitle=">"
-                      todayBackgroundColor="#63B2FB"
-                      selectedDayColor="#63B2FB"
-                      selectedDayTextColor="#fff"
-                      scaleFactor={375}
-                      textStyle={{
-                        fontFamily: 'Cochin',
-                        color: '#000000',
-                        fontSize: 14,
-                      }}
-                      monthTitleStyle={{
-                        // backgroundColor: 'pink',
-                        fontWeight: '700',
-                        fontSize: 18,
-                      }}
-                      yearTitleStyle={{
-                        // backgroundColor: 'grey',
-                        fontWeight: '700',
-                        fontSize: 18,
-                      }}
-                      headerWrapperStyle={{
-                        marginBottom: 20,
-                        // paddingVertical: 20,
-                      }}
-                      onDateChange={onDateChange}
-                      dayLabelsWrapper={{
-                        backgroundColor: '#63B2FB',
-                        borderRadius: 10,
-                        borderColor: 0,
-                      }}
-                    />
-                    <Pressable style={[styles.button]} onPress={onSubmit}>
-                      <Text style={styles.textStyle}>OK</Text>
-                    </Pressable>
-                  </View>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              Alert.alert('Modal has been closed.');
+              setModalVisible(!modalVisible);
+            }}>
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <CalendarPicker
+                  startFromMonday={true}
+                  allowRangeSelection={true}
+                  minDate={new Date(2010, 1, 1)}
+                  maxDate={new Date(2050, 12, 31)}
+                  width={windowWidth / 1.3}
+                  weekdays={['Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun']}
+                  months={[
+                    'January',
+                    'Febraury',
+                    'March',
+                    'April',
+                    'May',
+                    'June',
+                    'July',
+                    'August',
+                    'September',
+                    'October',
+                    'November',
+                    'December',
+                  ]}
+                  previousTitleStyle={{
+                    color: 'blue',
+                    fontSize: 24,
+                  }}
+                  previousTitle="<"
+                  nextTitleStyle={{
+                    color: 'blue',
+                    fontSize: 24,
+                  }}
+                  nextTitle=">"
+                  todayBackgroundColor="#63B2FB"
+                  selectedDayColor="#63B2FB"
+                  selectedDayTextColor="#fff"
+                  scaleFactor={375}
+                  textStyle={{
+                    fontFamily: 'Cochin',
+                    color: '#000000',
+                    fontSize: 14,
+                  }}
+                  monthTitleStyle={{
+                    // backgroundColor: 'pink',
+                    fontWeight: '700',
+                    fontSize: 18,
+                  }}
+                  yearTitleStyle={{
+                    // backgroundColor: 'grey',
+                    fontWeight: '700',
+                    fontSize: 18,
+                  }}
+                  headerWrapperStyle={{
+                    marginBottom: 20,
+                    // paddingVertical: 20,
+                  }}
+                  onDateChange={onDateChange}
+                  dayLabelsWrapper={{
+                    backgroundColor: '#63B2FB',
+                    borderRadius: 10,
+                    borderColor: 0,
+                  }}
+                />
+                <View
+                  style={{
+                    // backgroundColor: 'pink',
+                    width: windowWidth / 1.2,
+                    // height: 40
+                  }}>
+                  <TextInput
+                    placeholder="Travel With Train, Bus, etc"
+                    style={styles.input}
+                    keyboardType="default"
+                    onChangeText={onChangeText}
+                    value={text}
+                  />
+                  {/* <TextInput
+                  placeholder='Start Date - End Date'
+                    style={styles.input}
+                    keyboardType="default"
+                    onChangeText={onChangeNumber}
+                    value={number}
+                  /> */}
                 </View>
-              </Modal>
+                <Pressable style={[styles.button]} onPress={() => onSubmit()}>
+                  <Text style={styles.textStyle}>OK</Text>
+                </Pressable>
+              </View>
             </View>
-          {/* </LinearGradient> */}
+          </Modal>
+        </View>
+          </LinearGradient>
         </ScrollView>
       </View>
     );
@@ -473,6 +627,12 @@ import {
     container: {
       flex: 1,
       backgroundColor: 'white',
+    },
+    input: {
+      height: 40,
+      margin: 12,
+      borderWidth: 1,
+      padding: 10,
     },
     map: {
       width: windowWidth / 1,
@@ -533,13 +693,13 @@ import {
       fontSize: 14,
     },
     bookNow: {
-      marginTop: '10%',
+      marginTop: '15%',
       marginBottom: '5%',
       alignSelf: 'center',
       backgroundColor: '#63B2FB',
-      width: windowWidth / 2,
-      height: windowHeight / 18,
-      padding: 5,
+      width: '100%',
+      // height: windowHeight / 18,
+      padding: 10,
       borderRadius: 10,
     },
   });
