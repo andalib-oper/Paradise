@@ -7,6 +7,8 @@ import PackageNavigator from './PackageNavigator';
 import BookingsNavigator from './BookingsNavigator'
 import ProfileNavigator from './ProfileNavigator';
 import HomeNavigator from './HomeNavigator';
+import dem from '../src/mainTabs/Dem/Dem';
+import Dem from '../src/mainTabs/Dem/Dem';
 
 const Tab = createBottomTabNavigator();
 
@@ -24,6 +26,14 @@ const mainNavigator = () => {
       <Tab.Screen name="homeNavigator" component={HomeNavigator}
       options={{
         tabBarLabel: 'Home',
+        tabBarIcon: ({ color }) => (
+          <MaterialCommunityIcons name="home" color={color} size={26} />
+        ),
+        }}
+        />
+           <Tab.Screen name="dem" component={Dem}
+      options={{
+        tabBarLabel: 'Dem',
         tabBarIcon: ({ color }) => (
           <MaterialCommunityIcons name="home" color={color} size={26} />
         ),
