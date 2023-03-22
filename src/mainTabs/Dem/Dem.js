@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View,TextInput } from 'react-native'
+import { StyleSheet, Text, View,TextInput, TouchableOpacity } from 'react-native'
 import React,{useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { text } from '../../../redux/Dem/actions';
+import { clean, text } from '../../../redux/Dem/actions';
 
 const Dem = () => {
     const [number, onChangeNumber] = useState('');
@@ -25,6 +25,9 @@ const Dem = () => {
         placeholder="useless placeholder"
         keyboardType="numeric"
       />
+      <TouchableOpacity style={styles.cleanButton} onPress={()=>dispatch(clean())}>
+        <Text style={styles.cleanButtonText}>Clean</Text>
+      </TouchableOpacity>
     </View>
   )
 }
@@ -38,4 +41,16 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 10,
       },
+      cleanButton:{
+        alignSelf:"center",
+        padding:10,
+        margin:10,
+        backgroundColor:'blue'
+      },
+      cleanButtonText:{
+        alignSelf:'center',
+        fontSize:16,
+        color:'#fff',
+        fontWeight:'bold'
+      }
 })

@@ -1,4 +1,4 @@
-import { TEXT_STATE } from "./actionTypes";
+import { TEXT_CLEAN, TEXT_STATE } from "./actionTypes";
 
 const initialState = {
   inputVal:{
@@ -18,6 +18,10 @@ const demReducer = (state = initialState, action) => {
             ...state,
             inputVal: newInputValue,
           };
+    }
+    case TEXT_CLEAN:{
+      console.log("cleaning state")
+      return initialState
     }
     default:
         return state;
